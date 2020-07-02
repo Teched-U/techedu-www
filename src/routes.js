@@ -40,20 +40,28 @@ import RTLPage from "views/RTLPage/RTLPage.js";
 // TechedU components 
 import LearnPage from "views/Learn/Learn.js"
 import WatchPage from "views/Watch/Watch.js"
-
+import ExplorePage from "views/Explore/Explore.js"
 
 const dashboardRoutes = [
   {
+    path: "/explore",
+    name: "Explore",
+    icon: "explore",
+    component: ExplorePage,
+    layout: "/admin"
+  },
+
+  {
     path: "/watch",
     name: "Watch",
-    icon: Dashboard, 
+    icon: "devices",
     component: WatchPage,
     layout: "/admin"
   }, 
   {
     path: "/learn",
     name: "Learn",
-    icon: Dashboard,
+    icon: "school",
     component: LearnPage,
     layout: "/admin"
   }, 
@@ -121,14 +129,14 @@ const dashboardRoutes = [
     component: RTLPage,
     layout: "/rtl"
   },
-  {
-    path: "/upgrade-to-pro",
-    name: "Upgrade To PRO",
-    rtlName: "التطور للاحترافية",
-    icon: Unarchive,
-    component: UpgradeToPro,
-    layout: "/admin"
-  }
+  // {
+  //   path: "/upgrade-to-pro",
+  //   name: "Upgrade To PRO",
+  //   rtlName: "التطور للاحترافية",
+  //   icon: Unarchive,
+  //   component: UpgradeToPro,
+  //   layout: "/admin"
+  // }
 ];
 
 export default dashboardRoutes;
