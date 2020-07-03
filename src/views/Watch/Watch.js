@@ -15,6 +15,7 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import avatar from "assets/img/faces/marc.jpg";
 import xiaoxin from "assets/img/xiaoxin.jpg";
+import video from "assets/video/03_linear-algebra-review.mp4"
 
 // Import for Video
 import "video-react/dist/video-react.css"; // import css
@@ -57,7 +58,8 @@ export default function UserProfile() {
               <Player
                 playsInline
                 poster={xiaoxin}
-                src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+                //src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+                src={video}
               />
             </CardBody>
             <CardFooter>
