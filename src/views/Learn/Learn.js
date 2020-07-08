@@ -15,7 +15,8 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import avatar from "assets/img/faces/marc.jpg";
 import Recharts from 'echarts-for-react';
-import echarts from 'echarts'
+import echarts from 'echarts';
+import { List, ListItem,ListItemText,Link } from '@material-ui/core';
 const styles = {
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
@@ -37,7 +38,15 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 class Learn extends React.Component{
-    
+    state={
+        Links:[{
+            name:"视频链接"
+        },{
+            name:"视频链接"
+        },{
+            name:"视频链接"
+        }]
+    }
     render() {
         let graph={  
             nodes:[
@@ -195,7 +204,17 @@ class Learn extends React.Component{
             
           </Card>
         </GridItem>
-        
+        <GridItem xs={12} sm={12} md={4}> 
+            <List  style={{marginTop:"20px",marginLeft:"10px"}} aria-label="contacts">
+              
+              {this.state.Links.map((item,index)=>{
+                return <ListItem >
+                  <Link href="#" >{item.name}</Link>
+                  </ListItem>
+              })}
+              
+            </List>
+        </GridItem>
       </GridContainer>
 			</div>
         );
