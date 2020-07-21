@@ -39,32 +39,48 @@
 
 // TechedU components 
 import LearnPage from "views/Learn/Learn.js"
-import WatchPage from "views/Watch/Watch.js"
 import ExplorePage from "views/Explore/Explore.js"
+import UploadPage from "views/Upload/Upload.js"
+import AnalyzePage from "views/Analyze/Analyze.js"
+import DemoPage from "views/Demo/Demo.js"
 
 const dashboardRoutes = [
+  //{
+  //  path: "/explore",
+  //  name: "Explore",
+  //  icon: "explore",
+  //  component: ExplorePage,
+  //  layout: "/admin"
+  //},
+//
   {
-    path: "/explore",
-    name: "Explore",
-    icon: "explore",
-    component: ExplorePage,
-    layout: "/admin"
-  },
-
-  {
-    path: "/watch",
-    name: "Watch",
+    path: "/demo",
+    name: "Demo",
     icon: "devices",
-    component: WatchPage,
+    component: DemoPage,
     layout: "/admin"
   }, 
-  {
-    path: "/learn",
-    name: "Learn",
-    icon: "school",
-    component: LearnPage,
-    layout: "/admin"
-  }, 
+  // {
+  //   path: "/learn",
+  //   name: "Learn",
+  //   icon: "school",
+  //   component: LearnPage,
+  //   layout: "/admin"
+  // }, 
+  // {
+  //   path: "/upload",
+  //   name: "Upload",
+  //   icon: "school",
+  //   component: UploadPage,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/analysis",
+  //   name: "Analyze",
+  //   icon: "school", 
+  //   component: AnalyzePage,
+  //   layout: "/admin"
+  // }
   // {
   //   path: "/dashboard",
   //   name: "Dashboard",
