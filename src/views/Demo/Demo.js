@@ -31,7 +31,12 @@ import { Grid } from "@material-ui/core";
 import UploadComponent from 'views/Upload/Upload.js'
 import AnalysisComponent from 'views/Analyze/Analyze.js'
 import WatchComponent from "views/Watch/Watch.js"
-
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Grow from '@material-ui/core/Grow';
+import {
+  grayColor,
+  hexToRgb
+} from "assets/jss/material-dashboard-react.js";
 const styles = {
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
@@ -69,6 +74,8 @@ class DemoPage extends React.Component {
       // Analysis Data 
       seg_update: [], 
       seg_result: {},
+      modelView:false,
+      videoView:false
     }
   }
 
@@ -102,15 +109,23 @@ class DemoPage extends React.Component {
           seg_update: updates 
         });
       }
+      this.setState({
+        modelView:result.done
+      })
     }
-
+    toggleVideo(value){
+      console.log(this)
+      this.setState({
+        videoView:value
+      })
+    }
   render() {
     const { classes } = this.props
 
     return (
       <div>
         {/* 视频上传部分 */}
-        <GridContainer>
+        {this.state.videoView==false?<GridContainer>
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>上传视频</h4>
@@ -119,10 +134,11 @@ class DemoPage extends React.Component {
               <UploadComponent onUpload={(a, b) => this.handleUploadFile(a,b)}></UploadComponent>
             </CardBody>
           </Card>
-        </GridContainer>
+        </GridContainer>:null
+        }
 
         {/* 模型数据展示部分*/}
-        <GridContainer>
+        {(this.state.videoView==false)?<GridContainer style={{display:this.state.modelView?"block":"none"}}>
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>模型输出数据</h4>
@@ -134,15 +150,21 @@ class DemoPage extends React.Component {
                 onUpdate={(result) => this.handleSegResultUpdate(result)}
               >
               </AnalysisComponent>
+              <Button style={{width:"150px",fontSize:"20px",marginTop:"-25px",float:"right"}} variant="outlined" onClick={this.toggleVideo.bind(this,true)}>查看视频</Button>
             </CardBody>
           </Card>
         </GridContainer>
+        :null
+      }
         {/* 视频最终结果观看页面 */}
-        <div>
+        {this.state.videoView?<div>
+          <Grow in={this.state.videoView}>
+
+          
           <GridContainer>
             <Card>
               <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>切割视频展示</h4>
+              <Button className={classes.box} style={{width:"50px",fontSize:"20px",background:"rgba(1,1,1,0)",marginTop:"-1px"}}  variant="outlined" onClick={this.toggleVideo.bind(this,false)}><ArrowBackIcon></ArrowBackIcon></Button><h4 style={{display:"inline"}} className={classes.cardTitleWhite}>切割视频展示</h4>
               </CardHeader>
               <CardBody>
                 <WatchComponent
@@ -155,7 +177,10 @@ class DemoPage extends React.Component {
               </CardBody>
             </Card>
           </GridContainer>
+          </Grow>
         </div>
+        :null
+      }
       </div>
     );
   }

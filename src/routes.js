@@ -16,7 +16,7 @@
 
 */
 // @material-ui/icons
-// import Dashboard from "@material-ui/icons/Dashboard";
+ import Dashboard from "@material-ui/icons/Dashboard";
 // import Person from "@material-ui/icons/Person";
 // import LibraryBooks from "@material-ui/icons/LibraryBooks";
 // import BubbleChart from "@material-ui/icons/BubbleChart";
@@ -43,6 +43,7 @@ import ExplorePage from "views/Explore/Explore.js"
 import UploadPage from "views/Upload/Upload.js"
 import AnalyzePage from "views/Analyze/Analyze.js"
 import DemoPage from "views/Demo/Demo.js"
+import Product from "views/product/product.js"
 
 const dashboardRoutes = [
   //{
@@ -53,9 +54,16 @@ const dashboardRoutes = [
   //  layout: "/admin"
   //},
 //
+{
+  path: "/product",
+  name: "Product",
+  icon: Dashboard,
+  component: Product,
+  layout: "/admin"
+}, 
   {
     path: "/demo",
-    name: "Demo",
+    name: "result",
     icon: "devices",
     component: DemoPage,
     layout: "/admin"

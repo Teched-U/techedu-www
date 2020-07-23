@@ -14,7 +14,7 @@ export default function Footer(props) {
   const classes = useStyles();
   return (
     <footer className={classes.footer}>
-      <div className={classes.container}>
+      {/* <div className={classes.container}>
         <div className={classes.left}>
           <List className={classes.list}>
             <ListItem className={classes.inlineBlock}>
@@ -52,6 +52,9 @@ export default function Footer(props) {
             , made with love for a better education
           </span>
         </p>
+      </div> */}
+      <div className={classes.left}>
+        <span style={{paddingLeft:"10px"}}>Copyright &copy; {1900 + new Date().getYear()}{" "} Teched  U.</span>
       </div>
     </footer>
   );
