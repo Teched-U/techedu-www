@@ -56,10 +56,14 @@ class AnalyzePage extends React.Component {
         console.log(save_path);
         // Query the backend to get the updates
         this.socket = connectSocket((a,b)=>this.socketUpdateCb(a,b), save_path);
+        if(save_path==""){
+            this.socket.disconnect()
+        }
     }
 
     // Callback to be called when data is received from the server
     socketUpdateCb(err, result) {
+        
         if (!err) {
             console.log("OK: ")
             console.log(result)
@@ -67,9 +71,13 @@ class AnalyzePage extends React.Component {
                 seg_data: result
             })
             this.props.onUpdate(result)
+            if(result.done){
+                this.socket.disconnect()
+            }
         } else {
             console.log("ERROR: " + err)
         }
+    
     }
 
     // Disconnect the socket when go to another page
@@ -77,6 +85,15 @@ class AnalyzePage extends React.Component {
         this.socket.disconnect();
     }
 
+    componentDidUpdate(prevProps){
+        if(prevProps.videoName!=this.props.videoName){
+            this.socket.disconnect();
+            this.socket = connectSocket((a,b)=>this.socketUpdateCb(a,b), this.props.videoName);
+            if(this.props.videoName==""){
+                this.socket.disconnect();
+            }
+        }
+    }
     render() {
         const {classes} = this.props
         let stories;

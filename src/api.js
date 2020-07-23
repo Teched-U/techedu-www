@@ -6,7 +6,7 @@ import clip_data from 'assets/json/clip.json'
 export const ENDPOINT = 'http://35.245.113.215:5000';
 export const CDN_ENDPOINT = 'http://35.244.161.66/';
 
-export const FAKE_DATA = true;
+export const FAKE_DATA = false;
 
 
 export function connectSocket(cb, video_name) {
@@ -38,7 +38,6 @@ export function disconnectSocket(socket) {
         socket.disconnect();
     }
 }
-
 
 // TODO
 export function getSearchResult(user_input, seg_data) {

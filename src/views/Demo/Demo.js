@@ -32,7 +32,6 @@ import UploadComponent from 'views/Upload/Upload.js'
 import AnalysisComponent from 'views/Analyze/Analyze.js'
 import WatchComponent from "views/Watch/Watch.js"
 
-
 const styles = {
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
@@ -90,11 +89,11 @@ class DemoPage extends React.Component {
     * Logic for analysis component
     */
     handleSegResultUpdate(result) {
-     console.log('Result : ' + result)
       if(result.done) {
         this.setState({
           seg_result: result
         });
+        console.log(this.state.seg_result)
 
       } else {
         let updates = this.state.seg_update
@@ -146,7 +145,12 @@ class DemoPage extends React.Component {
                 <h4 className={classes.cardTitleWhite}>切割视频展示</h4>
               </CardHeader>
               <CardBody>
-                <WatchComponent>
+                <WatchComponent
+                videoName={this.state.video_name}
+                videoUrl={this.state.video_url}
+                segresult={this.state.seg_result}
+                segupdate={this.state.seg_update}
+                >
                 </WatchComponent>
               </CardBody>
             </Card>

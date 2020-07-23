@@ -3,7 +3,7 @@ import superagent from 'superagent';
 import {useDropzone} from 'react-dropzone';
 import { useHistory } from "react-router-dom";
 
-import {ENDPOINT, FAKE_DATA, CDN_ENDPOINT} from 'api';
+import {ENDPOINT, FAKE_DATA, CDN_ENDPOINT,connectSocket,disconnectSocket} from 'api';
 
 
 export default function UploadComponent(props) {
@@ -21,16 +21,23 @@ export default function UploadComponent(props) {
         } else {
           // Send the video for processing if API enabled
           superagent
-            .post(ENDPOINT + '/upload')
+            .post('/api'+'/upload')
             .attach('upload_file', file)
             .end((err, res) => {
               console.log(res.body);
-              video_name = res.body.video_name;
+              video_name = res.body.path;
               video_url= res.body.video_url;
+              // connectSocket((socket,res)=>{
+              //   console.log(res);
+                 props.onUpload(video_name, video_url)
+              //   disconnectSocket(socket);
+              // },video_name)
             });
+            
+            
         }
 
-        props.onUpload(video_name, video_url)
+        
 
         // TODO(这里应该隐去这个模块)
       });

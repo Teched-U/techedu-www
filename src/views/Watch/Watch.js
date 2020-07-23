@@ -45,6 +45,11 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 class WatchComponent extends React.Component{
+  constructor(props) {
+    super(props);
+    console.log(props)
+    
+  }
   componentDidMount() {
     console.log(this.player)
     this.player.subscribeToStateChange(this.handleStateChange.bind(this));
@@ -55,14 +60,17 @@ class WatchComponent extends React.Component{
       player:state
     })
   }
+
   click(event){
     
-    let times=event.value.split(":");
-    times.reverse();
+    //let times=event.start_time.split(":");
+    let times=event.start_time
+    //times.reverse();
     let time=0;
-    times.forEach((item,index)=>{
-      time=time+(parseInt(item)*Math.pow(60,index))
-    })
+    // times.forEach((item,index)=>{
+    //   time=time+(parseInt(item)*Math.pow(60,index))
+    // })
+    time=times;
     
     this.player.play()
     this.player.seek(time)
@@ -74,15 +82,15 @@ class WatchComponent extends React.Component{
     console.log(event)
   }
   render() {
-    const times=[{
-      name:"片段1",
-      value:"3:00"
+    let times=[{
+      word:"片段1",
+      start_time:11.4
     },{
-      name:"片段2",
-      value:"10:03"
+      word:"片段2",
+      start_time:60.7
     },{
-      name:"片段3",
-      value:"50:02"
+      word:"片段3",
+      start_time:100
     },]
     const other=[{
       name:'assets/video/03_linear-algebra-review.mp4',
@@ -110,6 +118,10 @@ class WatchComponent extends React.Component{
       keyword:"...下面就请罗老师给大家来讲一段时间管理...",
       time:"15:01"
     }]
+    if(this.props.segresult.story_list!=undefined){
+      times=this.props.segresult.story_list[0].words;
+    }
+    
     return (
       <div>
         <GridContainer>
@@ -123,11 +135,12 @@ class WatchComponent extends React.Component{
                 return <ListItem button onClick={
                   this.click.bind(this,item)
                 }>
-                  <ListItemText primary={item.name+" : "+item.value} />
+                  <ListItemText primary={"片段"+(index+1)+" : "+item.start_time} />
                   </ListItem>
               })}
               
             </List>
+              {this.props.segresult.state}
           </GridItem>
           <GridItem xs={12} sm={12} md={8}>
             <Card>
@@ -139,8 +152,9 @@ class WatchComponent extends React.Component{
                   poster={xiaoxin}
                   ref={(player) => { this.player = player }}
                   //src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
-                  src={require('assets/video/03_linear-algebra-review.mp4')}
-                />
+                  //src={require('assets/video/03_linear-algebra-review.mp4')}
+                  src={this.props.videoUrl==""?require('assets/video/03_linear-algebra-review.mp4'):this.props.videoUrl}
+                /> 
               </CardBody>
               <CardFooter>
                 <Button color="primary">Like the Video!</Button>
