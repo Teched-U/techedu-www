@@ -71,6 +71,8 @@ class DemoPage extends React.Component {
       video_name: '',
       video_url: '',
 
+      disconnect: false,
+
       // Analysis Data 
       seg_update: [], 
       seg_result: {},
@@ -96,21 +98,33 @@ class DemoPage extends React.Component {
     * Logic for analysis component
     */
     handleSegResultUpdate(result) {
-      if(result.done) {
+      let isDone = false 
+      let final_result = null
+
+      // Iterate all states
+      for(let state_result of result) {
+        if(state_result.done) {
+          final_result = state_result
+          isDone = true
+          console.log("I am done")
+        }
+      }
+
+      this.setState({
+        seg_update: result
+      });
+
+      if(isDone) {
         this.setState({
-          seg_result: result
+          seg_result: final_result,
+          disconnect: true,
         });
         console.log(this.state.seg_result)
 
-      } else {
-        let updates = this.state.seg_update
-        updates.push(result)
-        this.setState({
-          seg_update: updates 
-        });
       }
+
       this.setState({
-        modelView:result.done
+        modelView: isDone
       })
     }
     toggleVideo(value){
@@ -138,7 +152,7 @@ class DemoPage extends React.Component {
         }
 
         {/* 模型数据展示部分*/}
-        {(this.state.videoView==false)?<GridContainer style={{display:this.state.modelView?"block":"none"}}>
+        {(!!this.state.video_name)?<GridContainer>
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>模型输出数据</h4>
@@ -148,6 +162,8 @@ class DemoPage extends React.Component {
                 videoName={this.state.video_name}
                 videoUrl={this.state.video_url}
                 onUpdate={(result) => this.handleSegResultUpdate(result)}
+                segUpdate={this.state.seg_update}
+                disconnect={this.state.disconnect}
               >
               </AnalysisComponent>
               <Button style={{width:"150px",fontSize:"20px",marginTop:"-25px",float:"right"}} variant="outlined" onClick={this.toggleVideo.bind(this,true)}>查看视频</Button>

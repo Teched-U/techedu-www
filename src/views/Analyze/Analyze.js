@@ -89,7 +89,7 @@ class AnalyzePage extends React.Component {
         if(prevProps.videoName!=this.props.videoName){
             this.socket.disconnect();
             this.socket = connectSocket((a,b)=>this.socketUpdateCb(a,b), this.props.videoName);
-            if(this.props.videoName==""){
+            if(this.props.disconnect){
                 this.socket.disconnect();
             }
         }
@@ -97,17 +97,14 @@ class AnalyzePage extends React.Component {
     render() {
         const {classes} = this.props
         let stories;
-        if (this.state.seg_data.story_list) {
-            stories = this.state.seg_data.story_list.map((item) =>
-                <li key={item.timestamp}>
+        if (this.props.segUpdate.length > 0) {
+            stories = this.props.segUpdate.map((stateData) =>
+                <li key={stateData.id}>
+                    <h3>
+                        阶段: {stateData.state}
+                    </h3>
                     <p>
-                        transcript: {item.transcript}
-                    </p>
-                    <p>
-                        timestamp: {item.timestamp}
-                    </p>
-                    <p>
-                        duration: {item.duration}
+                        数据： {JSON.stringify(stateData.results,null, 2)}
                     </p>
                 </li>
             )
@@ -118,16 +115,10 @@ class AnalyzePage extends React.Component {
                     <Card>
                         <CardHeader color="primary">
                             <p className={classes.cardCategoryWhite}>
-                                This is page for video at: {this.props.videoUrl}
+                                视频链接: {this.props.videoUrl}
                             </p>
                         </CardHeader>
                         <CardBody>
-                            <p>
-                                State: {this.state.seg_data.state}
-                            </p>
-                            <p>
-                                Done: '{this.state.seg_data.done}'
-                            </p>
                             <div>
                                 <ul>
                                     {

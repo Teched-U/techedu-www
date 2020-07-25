@@ -49,6 +49,26 @@ class WatchComponent extends React.Component{
     super(props);
     console.log(props)
     
+    let results = props.segresult.results
+    this.times = []
+    console.log("results")
+    console.log(results)
+    for(let story of results) {
+      let outline = story.outline
+      console.log(story)
+      for(let slide of outline) {
+        console.log(slide)
+        let title = slide.result.Title.text
+        let time = slide.timestamp
+
+        this.times.push({
+          word: title,
+          start_time: time
+        })
+      }
+    }
+    console.log("Times:")
+    console.log(this.times)
   }
   componentDidMount() {
     console.log(this.player)
@@ -81,6 +101,7 @@ class WatchComponent extends React.Component{
 
     console.log(event)
   }
+
   render() {
     let times=[{
       word:"片段1",
@@ -92,7 +113,7 @@ class WatchComponent extends React.Component{
       word:"片段3",
       start_time:100
     },]
-    const other=[{
+    let other=[{
       name:'assets/video/03_linear-algebra-review.mp4',
       
     },{
@@ -111,6 +132,7 @@ class WatchComponent extends React.Component{
       name:'assets/video/03_linear-algebra-review.mp4',
       
     },]
+    other = []
     const result=[{
       keyword:"...时间管理非常的重要...",
       time:"12:00"
@@ -131,16 +153,15 @@ class WatchComponent extends React.Component{
                 
                 <ListItemText primary="大纲" />
               </ListItem>
-              {times.map((item,index)=>{
+              {this.times.map((item,index)=>{
                 return <ListItem button onClick={
                   this.click.bind(this,item)
                 }>
-                  <ListItemText primary={"片段"+(index+1)+" : "+item.start_time} />
+                  <ListItemText primary={item.word+" : "+item.start_time+"s"} />
                   </ListItem>
               })}
               
             </List>
-              {this.props.segresult.state}
           </GridItem>
           <GridItem xs={12} sm={12} md={8}>
             <Card>
@@ -149,7 +170,6 @@ class WatchComponent extends React.Component{
               <CardBody>
                 <Player
                   playsInline
-                  poster={xiaoxin}
                   ref={(player) => { this.player = player }}
                   //src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
                   //src={require('assets/video/03_linear-algebra-review.mp4')}

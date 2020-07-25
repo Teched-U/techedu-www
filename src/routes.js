@@ -56,14 +56,14 @@ const dashboardRoutes = [
 //
 {
   path: "/product",
-  name: "Product",
+  name: "主页",
   icon: Dashboard,
   component: Product,
   layout: "/admin"
 }, 
   {
     path: "/demo",
-    name: "result",
+    name: "数据结果",
     icon: "devices",
     component: DemoPage,
     layout: "/admin"
