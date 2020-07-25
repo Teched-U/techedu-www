@@ -77,7 +77,9 @@ class DemoPage extends React.Component {
       seg_update: [], 
       seg_result: {},
       modelView:false,
-      videoView:false
+
+      //videoView: false,
+      videoView: true
     }
   }
 
@@ -93,6 +95,7 @@ class DemoPage extends React.Component {
        video_url: video_url
      });
    }
+
 
    /**
     * Logic for analysis component

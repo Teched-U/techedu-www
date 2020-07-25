@@ -1,6 +1,6 @@
 import React from "react";
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 // core components
 import GridItem from "components/Grid/GridItem.js";
@@ -12,6 +12,18 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
+import WorkIcon from '@material-ui/icons/Work';
+import VideocamIcon from '@material-ui/icons/Videocam';
+import Tooltip from '@material-ui/core/Tooltip';
+import Image from 'material-ui-image'
+
+
+
+import Time from 'react-time-format'
+
+
 
 import avatar from "assets/img/faces/marc.jpg";
 import xiaoxin from "assets/img/xiaoxin.jpg";
@@ -20,8 +32,10 @@ import video from "assets/video/03_linear-algebra-review.mp4"
 // Import for Video
 import "video-react/dist/video-react.css"; // import css
 import { Player } from 'video-react';
-import { List, ListItem,ListItemText } from '@material-ui/core';
+import { List, ListItem,ListItemText, ListSubheader, ListItemAvatar, ListItemIcon } from '@material-ui/core';
+import fake_data from 'assets/json/clip.json'
 
+var moment = require('moment');
 
 const styles = {
   cardCategoryWhite: {
@@ -48,27 +62,50 @@ class WatchComponent extends React.Component{
   constructor(props) {
     super(props);
     console.log(props)
+    this.classes = props.classes
     
-    let results = props.segresult.results
+    let results = fake_data[3].results
+    //let results = props.segresult.results
     this.times = []
     console.log("results")
     console.log(results)
-    for(let story of results) {
-      let outline = story.outline
-      console.log(story)
-      for(let slide of outline) {
-        console.log(slide)
-        let title = slide.result.Title.text
-        let time = slide.timestamp
 
-        this.times.push({
+    // Get the outlines for each story
+    this.story_outlines = []
+    for(let story of results.story_list) {
+      let start_time = story.timestamp
+      let end_time = story.timestamp + story.duration
+      start_time = moment.utc(moment.duration(start_time, 'seconds').asMilliseconds()).format('mm:ss')
+      end_time = moment.utc(moment.duration(end_time, 'seconds').asMilliseconds()).format('mm:ss')
+      let story_elem = {
+        timestamp: story.timestamp,
+        duration: story.duration,
+        thumbnail: story.thumbnail,
+        start: start_time,
+        end: end_time,
+        outline: []
+      }
+      let outline_list = []
+      let outline = story.outline
+      for(let slide of outline) {
+        let title = slide.result.Title.text
+        let start_time = slide.timestamp
+        let thumbnail = slide.thumbnail
+
+        outline_list.push({
           word: title,
-          start_time: time
+          timestamp: start_time,
+          thumbnail: thumbnail,
         })
       }
+
+      story_elem.outline = outline_list
+      this.story_outlines.push(story_elem)
     }
-    console.log("Times:")
-    console.log(this.times)
+
+    // story_outlines
+    console.log(this.story_outlines)
+
   }
   componentDidMount() {
     console.log(this.player)
@@ -81,17 +118,9 @@ class WatchComponent extends React.Component{
     })
   }
 
-  click(event){
+  click(time){
     
     //let times=event.start_time.split(":");
-    let times=event.start_time
-    //times.reverse();
-    let time=0;
-    // times.forEach((item,index)=>{
-    //   time=time+(parseInt(item)*Math.pow(60,index))
-    // })
-    time=times;
-    
     this.player.play()
     this.player.seek(time)
     this.setState({
@@ -99,7 +128,7 @@ class WatchComponent extends React.Component{
     })
     
 
-    console.log(event)
+    console.log(time)
   }
 
   render() {
@@ -143,24 +172,50 @@ class WatchComponent extends React.Component{
     if(this.props.segresult.story_list!=undefined){
       times=this.props.segresult.story_list[0].words;
     }
+
+
+    let story_list_elems = this.story_outlines.map((story, story_idx) => (
+      <li key={`section-${story_idx}`} className={this.classes.listSection}>
+        <ul className={this.classes.ul}>
+          <ListSubheader color={'primary'}>
+            <ListItem>
+              <ListItemIcon>
+                <VideocamIcon />
+              </ListItemIcon>
+              <Typography variant="h6">
+                {`${story.start} - ${story.end}`}
+              </Typography>
+            </ListItem>
+          </ListSubheader>
+          {story.outline.map((item, item_idx) => (
+            <ListItem key={`item-${story_idx}-${item_idx}`} button onClick={
+              this.click.bind(this, item.timestamp)
+            }>
+              <ListItemAvatar>
+                <Tooltip title={
+                  <React.Fragment>
+                    <Image
+                      src={item.thumbnail}
+                      imageStyle={{width: 200, height:'inherit'}}
+                    />
+                  </React.Fragment>
+                }>
+                  <Avatar variant="rounded" src={`${item.thumbnail}`} />
+                </Tooltip>
+              </ListItemAvatar>
+              <ListItemText primary={`${item.word}`} />
+            </ListItem>
+          ))}
+        </ul>
+      </li>
+    ))
     
     return (
       <div>
         <GridContainer>
-          <GridItem xs={12} sm={12} md={2}>
-            <List   aria-label="contacts">
-              <ListItem style={{textAlign:"center",border:"2px solid #fff"}}>
-                
-                <ListItemText primary="大纲" />
-              </ListItem>
-              {this.times.map((item,index)=>{
-                return <ListItem button onClick={
-                  this.click.bind(this,item)
-                }>
-                  <ListItemText primary={item.word+" : "+item.start_time+"s"} />
-                  </ListItem>
-              })}
-              
+          <GridItem xs={12} sm={12} md={4}>
+            <List aria-label="contacts" subheader={<li />}>
+              {story_list_elems}
             </List>
           </GridItem>
           <GridItem xs={12} sm={12} md={8}>
@@ -176,12 +231,9 @@ class WatchComponent extends React.Component{
                   src={this.props.videoUrl==""?require('assets/video/03_linear-algebra-review.mp4'):this.props.videoUrl}
                 /> 
               </CardBody>
-              <CardFooter>
-                <Button color="primary">Like the Video!</Button>
-              </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={12} sm={12} md={2}>
+          {false?<GridItem xs={12} sm={12} md={2}>
             <CustomInput
                       labelText=""
                       id="search"
@@ -211,9 +263,9 @@ class WatchComponent extends React.Component{
                       })}
               
                     </List>
-          </GridItem>
+          </GridItem>:null}
         </GridContainer>
-        <GridContainer>
+        {false?<GridContainer>
           <GridItem xs={12} sm={12} md={12}>
             <List style={{display:"flex"}} aria-label="contacts">
               {other.map(item=>{
@@ -227,9 +279,9 @@ class WatchComponent extends React.Component{
               })}
             </List>
           </GridItem>
-        </GridContainer>
+        </GridContainer>:null}
       </div>
     );
   }
 }
-export default WatchComponent;
+export default withStyles(styles)(WatchComponent);
