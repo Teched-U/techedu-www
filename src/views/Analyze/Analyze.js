@@ -4,11 +4,19 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
+// import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import {connectSocket} from 'api';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { Divider,CardActionArea ,CardContent,CardMedia,Typography,List,ListItem,ListItemText,ListItemAvatar,Avatar,CircularProgress} from "@material-ui/core";
 
 const styles = {
   cardCategoryWhite: {
@@ -37,7 +45,21 @@ const styles = {
       fontWeight: "400",
       lineHeight: "1"
     }
-  }
+  },
+  sCard:{
+      boxShadow:"0 2px 2px 0 rgba(155,155,155, 0.14), 0 3px 1px -2px rgba(155,155,155, 0.14), 0 1px 5px 0 rgba(155,155,155,0.12)",
+      width:"70%",
+      margin:"auto"
+  },
+  root: {
+    maxWidth: 345,
+  },
+  media: {
+    height: 140,
+  },
+  inline: {
+    display: 'inline',
+  },
 };
 
 
@@ -48,7 +70,8 @@ class AnalyzePage extends React.Component {
         super(props);
         this.socket = null;
         this.state = {
-            seg_data: []
+            seg_data: [],
+            done:true
         }
 
         // Get video name
@@ -70,9 +93,13 @@ class AnalyzePage extends React.Component {
             this.setState({
                 seg_data: result
             })
+            let res=result[result.length-1];
             this.props.onUpdate(result)
-            if(result.done){
+            if(res.done){
                 this.socket.disconnect()
+                this.setState({
+                    done:!res.done
+                })
             }
         } else {
             console.log("ERROR: " + err)
@@ -86,7 +113,14 @@ class AnalyzePage extends React.Component {
     }
 
     componentDidUpdate(prevProps){
-        if(prevProps.videoName!=this.props.videoName){
+        // if(prevProps.videoName!=this.props.videoName){
+        //     this.socket.disconnect();
+        //     this.socket = connectSocket((a,b)=>this.socketUpdateCb(a,b), this.props.videoName);
+        //     if(this.props.disconnect){
+        //         this.socket.disconnect();
+        //     }
+        // }
+        if(prevProps.disconnect!=this.props.disconnect){
             this.socket.disconnect();
             this.socket = connectSocket((a,b)=>this.socketUpdateCb(a,b), this.props.videoName);
             if(this.props.disconnect){
@@ -99,36 +133,218 @@ class AnalyzePage extends React.Component {
         let stories;
         if (this.props.segUpdate.length > 0) {
             stories = this.props.segUpdate.map((stateData) =>
-                <li key={stateData.id}>
-                    <h3>
-                        阶段: {stateData.state}
-                    </h3>
-                    <p>
-                        数据： {JSON.stringify(stateData.results,null, 2)}
-                    </p>
-                </li>
+                <Card>
+                    <CardHeader color="primary">
+                        <h3 style={{marginTop:0}}>
+                            {stateData.state}
+                        </h3>
+                        <p className={classes.cardCategoryWhite}>
+                            {stateData.id==1?"通过Google Speech-To——text API 获取视频音频信息中...":""}
+                            {stateData.id==2?"根据视频的大纲信息整合字幕片段，大纲信息相同的字幕片段将会被整合到一起":""}
+                            {stateData.id==3?"通过BERT + TopicNet提取多摸态信息，生成完整的短视频":""}
+                            {stateData.id==4?"基于关键帧提取算法和大纲提取模块，对切割好的短视频建立大纲":""}
+                        </p>
+                    </CardHeader>
+                    <CardBody>
+                        {/* <h3>
+                            阶段: {stateData.state}
+                        </h3>
+                        <p>
+                            数据： {JSON.stringify(stateData.results,null, 2)}
+                        </p> */}
+                        
+                        {stateData.id==1?
+                            <GridContainer>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CardBody className={classes.sCard}>
+                                    片段数量{stateData.results.num_segs!=undefined?stateData.results.num_segs:0}
+                                    
+                                    </CardBody>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CardBody className={classes.sCard}>
+                                    平均长度{stateData.results.avg_seg_dur!=undefined?stateData.results.avg_seg_dur:0}
+                                    
+                                    </CardBody>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CardBody className={classes.sCard}>
+                                    最长片段{stateData.results.max_duration!=undefined?stateData.results.max_duration:0}
+                                    
+                                    </CardBody>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CardBody className={classes.sCard}>
+                                    最短片段{stateData.results.min_duration!=undefined?stateData.results.min_duration:0}
+                                    
+                                    </CardBody>
+                                </GridItem>
+                            </GridContainer>:null}
+                            {stateData.id==1?
+                            <Table aria-label="simple table">
+                                <TableHead>
+                                <TableRow>
+                                    <TableCell>时长</TableCell>
+                                    <TableCell align="right">字幕</TableCell>
+                                    
+                                </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {stateData.transcripts!=undefined?
+                                        stateData.transcripts.map((row) => (
+                                            <TableRow key={row.timestamp}>
+                                            
+                                            <TableCell align="right">{row.timestamp}</TableCell>
+                                            <TableCell align="right">{row.transcript}</TableCell>
+                    
+                                            </TableRow>
+                                        )):null}
+                                </TableBody>
+                            </Table>:null}
+
+                            {stateData.id==2?<div>
+                                <GridContainer>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CardBody className={classes.sCard}>
+                                    语句数量{stateData.results.old_num_segs!=undefined?stateData.results.old_num_segs:0}→{stateData.results.new_num_segs!=undefined?stateData.results.new_num_segs:0}
+                                    
+                                    </CardBody>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CardBody className={classes.sCard}>
+                                    平均长度{stateData.results.old_avg_seg_dur!=undefined?stateData.results.old_avg_seg_dur:0}→{stateData.results.new_avg_seg_dur!=undefined?stateData.results.new_avg_seg_dur:0}
+                                    
+                                    </CardBody>
+                                </GridItem>
+                                
+                            </GridContainer>
+                            </div>:null}
+                            {stateData.id==3?<div>
+                                <GridContainer>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CardBody className={classes.sCard}>
+                                    短视频数量{stateData.results.num_story!=undefined?stateData.results.num_story:0}
+                                    
+                                    </CardBody>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CardBody className={classes.sCard}>
+                                    平均长度{stateData.results.avg_story_len!=undefined?stateData.results.avg_story_len:0}
+                                    
+                                    </CardBody>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={12}>
+                                
+                                {stateData.results.story_list!=undefined?
+                                    stateData.results.story_list.map((row,index) => (
+                                        <Card className={classes.root} style={{display: "inline-block",
+                                            marginRight: "30px"}}>
+                                        <CardActionArea>
+                                            <CardMedia
+                                            className={classes.media}
+                                            image={row.thumbnail}
+                                            title=""
+                                            />
+                                            <CardContent>
+                                            <Typography gutterBottom variant="h5" component="h2">
+                                            短视频{(index+1)}
+                                            </Typography>
+                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                {row.timestamp}
+                                            </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                    
+                                        </Card>
+                                    )):null}
+                                    </GridItem>
+                            </GridContainer>
+                            </div>:null}
+
+                            {stateData.id==4||stateData.id==5?<div>
+                                <GridContainer>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CardBody className={classes.sCard}>
+                                    短视频数量{stateData.results.num_story!=undefined?stateData.results.num_story:0}
+                                    
+                                    </CardBody>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CardBody className={classes.sCard}>
+                                    平均长度{stateData.results.avg_story_len!=undefined?stateData.results.avg_story_len:0}
+                                    
+                                    </CardBody>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={12}>
+                                
+                                {stateData.results.story_list!=undefined?
+                                    stateData.results.story_list.map((row,index) => (
+                                        <div>
+                                        <Card className={classes.root}>
+                                        <CardActionArea>
+                                            <CardMedia
+                                            className={classes.media}
+                                            image={row.thumbnail}
+                                            title=""
+                                            />
+                                            <CardContent>
+                                            <Typography gutterBottom variant="h5" component="h2">
+                                                短视频{(index+1)}
+                                            </Typography>
+                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                {row.timestamp}
+                                            </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                    
+                                        </Card>
+                                        
+                                            <div style={{float:"right"}}>
+                                            <List>
+                                                {row.outline.map((out)=>(
+                                                    <ListItem alignItems="flex-start">
+                                                    <ListItemAvatar>
+                                                      <Avatar variant="square" alt="Remy Sharp" src={out.slide} />
+                                                    </ListItemAvatar>
+                                                    <ListItemText
+                                                      primary={out.result.Title.text}
+                                                      secondary={
+                                                        <React.Fragment>
+                                                          <Typography
+                                                            component="span"
+                                                            variant="body2"
+                                                            className={classes.inline}
+                                                            color="textPrimary"
+                                                          >
+                                                            
+                                                          </Typography>
+                                                          {out.result.Subtitle}
+                                                        </React.Fragment>
+                                                      }
+                                                    />
+                                                  </ListItem>
+                                                  
+                                                ))}
+                                            </List>
+                                            </div>
+                                        
+                                        </div>
+                                    )):null}
+                                    </GridItem>
+                            </GridContainer>
+                            </div>:null}
+                    </CardBody>
+                </Card>
             )
         }
         return (
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
-                    <Card>
-                        <CardHeader color="primary">
-                            <p className={classes.cardCategoryWhite}>
-                                视频链接: {this.props.videoUrl}
-                            </p>
-                        </CardHeader>
-                        <CardBody>
-                            <div>
-                                <ul>
-                                    {
+                {this.state.done && <CircularProgress style={{float:"right"}} color="secondary" />}
+                    
+                {
                                         stories
                                     }
-                                </ul>
-                            </div>
-
-                        </CardBody>
-                    </Card>
                 </GridItem>
             </GridContainer>
         );
