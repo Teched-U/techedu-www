@@ -18,6 +18,7 @@ import WorkIcon from '@material-ui/icons/Work';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import Tooltip from '@material-ui/core/Tooltip';
 import Image from 'material-ui-image'
+import {format_time, getSearchResult} from 'api'
 
 
 
@@ -35,7 +36,6 @@ import { Player } from 'video-react';
 import { List, ListItem,ListItemText, ListSubheader, ListItemAvatar, ListItemIcon } from '@material-ui/core';
 import fake_data from 'assets/json/clip.json'
 
-var moment = require('moment');
 
 const styles = {
   cardCategoryWhite: {
@@ -63,20 +63,26 @@ class WatchComponent extends React.Component{
     super(props);
     console.log(props)
     this.classes = props.classes
+
     
-    let results = fake_data[3].results
-    //let results = props.segresult.results
+    //let results = fake_data[3].results
+    let results = props.segresult.results
     this.times = []
     console.log("results")
     console.log(results)
+
+    this.state = {
+      seg_result: results,
+      search_word : ""
+    }
 
     // Get the outlines for each story
     this.story_outlines = []
     for(let story of results.story_list) {
       let start_time = story.timestamp
       let end_time = story.timestamp + story.duration
-      start_time = moment.utc(moment.duration(start_time, 'seconds').asMilliseconds()).format('mm:ss')
-      end_time = moment.utc(moment.duration(end_time, 'seconds').asMilliseconds()).format('mm:ss')
+      start_time = format_time(start_time)
+      end_time = format_time(end_time)
       let story_elem = {
         timestamp: story.timestamp,
         duration: story.duration,
@@ -182,29 +188,33 @@ class WatchComponent extends React.Component{
               <ListItemIcon>
                 <VideocamIcon />
               </ListItemIcon>
-              <Typography variant="h6">
-                {`${story.start} - ${story.end}`}
-              </Typography>
+              <ListItemText
+                primary={`${story.start} - ${story.end}`}
+                primaryTypographyProps={{variant: 'subtitle1'}}
+              />
             </ListItem>
           </ListSubheader>
           {story.outline.map((item, item_idx) => (
-            <ListItem key={`item-${story_idx}-${item_idx}`} button onClick={
-              this.click.bind(this, item.timestamp)
+            <Tooltip title={
+              <React.Fragment>
+                <Image
+                  src={item.thumbnail}
+                  imageStyle={{ width: 300, height: 'inherit' }}
+                />
+              </React.Fragment>
             }>
-              <ListItemAvatar>
-                <Tooltip title={
-                  <React.Fragment>
-                    <Image
-                      src={item.thumbnail}
-                      imageStyle={{width: 200, height:'inherit'}}
-                    />
-                  </React.Fragment>
-                }>
+              <ListItem key={`item-${story_idx}-${item_idx}`} button onClick={
+                this.click.bind(this, item.timestamp)
+              }>
+                <ListItemAvatar>
                   <Avatar variant="rounded" src={`${item.thumbnail}`} />
-                </Tooltip>
-              </ListItemAvatar>
-              <ListItemText primary={`${item.word}`} />
-            </ListItem>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={`${item.word}`}
+                  primaryTypographyProps={{ variant: 'caption' }}
+                />
+              </ListItem>
+            </Tooltip>
           ))}
         </ul>
       </li>
@@ -233,7 +243,7 @@ class WatchComponent extends React.Component{
               </CardBody>
             </Card>
           </GridItem>
-          {false?<GridItem xs={12} sm={12} md={2}>
+          {true?<GridItem xs={12} sm={12} md={12}>
             <CustomInput
                       labelText=""
                       id="search"
@@ -248,38 +258,9 @@ class WatchComponent extends React.Component{
                           }
                       }}
                     />
-                    <List   aria-label="contacts">
-                      {result.map((item,index)=>{
-                        return <ListItem>
-                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={8}>
-                              {item.keyword}
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={4}>
-                              {item.time}
-                            </GridItem>
-                            </GridContainer>
-                          </ListItem>
-                      })}
-              
-                    </List>
+                    {getSearchResult(this.state.search_word, this.state.seg_result)}
           </GridItem>:null}
         </GridContainer>
-        {false?<GridContainer>
-          <GridItem xs={12} sm={12} md={12}>
-            <List style={{display:"flex"}} aria-label="contacts">
-              {other.map(item=>{
-                return <ListItem>
-                  <Player
-                  playsInline
-                  poster={xiaoxin}
-                  src={require('assets/video/03_linear-algebra-review.mp4')}
-                />
-                </ListItem>
-              })}
-            </List>
-          </GridItem>
-        </GridContainer>:null}
       </div>
     );
   }

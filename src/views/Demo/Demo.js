@@ -37,6 +37,9 @@ import {
   grayColor,
   hexToRgb
 } from "assets/jss/material-dashboard-react.js";
+
+import fake_data from 'assets/json/clip.json';
+
 const styles = {
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
@@ -59,6 +62,8 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 
+
+
 class DemoPage extends React.Component {
   constructor(props) {
     super(props);
@@ -69,17 +74,19 @@ class DemoPage extends React.Component {
       
       // Upload state 
       video_name: '',
+      //video_name: 'clip.mp4',
       video_url: '',
 
       disconnect: false,
 
       // Analysis Data 
-      seg_update: [], 
+      seg_update:[],
+      //seg_update: fake_data, 
       seg_result: {},
       modelView:false,
 
-      //videoView: false,
-      videoView: true
+      videoView: false,
+      //videoView: true
     }
   }
 
