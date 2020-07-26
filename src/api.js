@@ -64,6 +64,41 @@ export function getSearchResult(user_input, seg_data) {
         }
      */
     if(user_input == "") {
-        return null;
+        return [];
     }
+
+    let story_list = seg_data.story_list
+
+    let results  = []
+    for (let story of story_list) {
+        let words = story.words
+        for (let i = 0; i < words.length ; i++) {
+            let word = words[i]
+            if(word.word == user_input) {
+                // Gather the previous 5 words
+                let prev_words = []
+                for(let j = Math.max(0, i - 5); j < i; j++){
+                    prev_words.push(words[j].word)
+                }
+
+                let next_words = []
+                for(let j= i+1; j < Math.min(words.length, i + 5); j++){
+                    next_words.push(words[j].word)
+                }
+                
+                let j = Math.max(0, i-5)
+                let ts = words[j].start_time
+                let prev_phrase = prev_words.join(' ')
+                let next_phrase = next_words.join(' ')
+                results.push({
+                    prev_phrase: prev_phrase,
+                    next_phrase: next_phrase,
+                    start: ts,
+                    word: word.word
+                })
+            }
+        }
+    }
+
+    return results
 }

@@ -28,6 +28,7 @@ import {
     Legend,
 } from '@devexpress/dx-react-chart-material-ui';
 import { Stack, Animation } from '@devexpress/dx-react-chart';
+import DataCard from './DataCard.js'
 
 const legendStyles = () => ({
     root: {
@@ -113,15 +114,15 @@ class AnalyzePage extends React.Component {
         let save_path = this.props.videoName
         console.log(save_path);
         // Query the backend to get the updates
-        this.socket = connectSocket((a,b)=>this.socketUpdateCb(a,b), save_path);
-        if(save_path==""){
+        this.socket = connectSocket((a, b) => this.socketUpdateCb(a, b), save_path);
+        if (save_path == "") {
             this.socket.disconnect()
         }
     }
 
     // Callback to be called when data is received from the server
     socketUpdateCb(err, result) {
-        if(result.length == 0) {
+        if (result.length == 0) {
             // Empty result
             return
         }
@@ -193,103 +194,122 @@ class AnalyzePage extends React.Component {
                         </p> */}
 
                         {stateData.id == 1 ?
-                            <GridContainer>
+                            <GridContainer spacing={4} direction="column">
+                                <Grid item container direction="row" spacing={2}>
+                                    <GridItem xs={12} sm={12} md={6}>
+                                        <DataCard
+                                            primary={"片段数量"}
+                                            secondary={"字幕句子数量"}
+                                            data={stateData.results.num_segs}
+                                        />
+                                    </GridItem>
+                                    <GridItem xs={12} sm={12} md={6}>
+                                        <DataCard
+                                            primary={"平均长度"}
+                                            secondary={"单个句子长度(秒）"}
+                                            data={stateData.results.avg_seg_dur.toFixed(1)}
+                                        />
+                                    </GridItem>
+                                </Grid>
+                                <Grid item container direction="row" spacing={2}>
                                 <GridItem xs={12} sm={12} md={6}>
-                                    <CardBody className={classes.sCard}>
-                                        片段数量{stateData.results.num_segs != undefined ? stateData.results.num_segs : 0}
-
-                                    </CardBody>
+                                    <DataCard
+                                        primary={"最长长度"}
+                                        secondary={"最长字幕单句长度(秒）"}
+                                        data={stateData.results.max_duration.toFixed(1)}
+                                    />
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={6}>
-                                    <CardBody className={classes.sCard}>
-                                        平均长度{stateData.results.avg_seg_dur != undefined ? stateData.results.avg_seg_dur : 0}
-
-                                    </CardBody>
+                                    <DataCard
+                                        primary={"最短长度"}
+                                        secondary={"最短字幕单句长度(秒）"}
+                                        data={stateData.results.min_duration.toFixed(1)}
+                                    />
                                 </GridItem>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CardBody className={classes.sCard}>
-                                        最长片段{stateData.results.max_duration != undefined ? stateData.results.max_duration : 0}
+                                </Grid>
+                                <Grid item container>
 
-                                    </CardBody>
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CardBody className={classes.sCard}>
-                                        最短片段{stateData.results.min_duration != undefined ? stateData.results.min_duration : 0}
-
-                                    </CardBody>
-                                </GridItem>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                        <MaterialTable
+                                            columns={[
+                                                { title: "时间", field: "timestamp" },
+                                                { title: "字幕", field: "transcript" }
+                                            ]}
+                                            data={
+                                                stateData.results.transcripts.map((row) => (
+                                                    {
+                                                        "timestamp": format_time(row.timestamp) + " - " + format_time(row.timestamp + row.duration),
+                                                        "transcript": row.transcript
+                                                    }
+                                                ))
+                                            }
+                                            title={"字幕信息"}
+                                        >
+                                        </MaterialTable>
+                                    </GridItem>
+                                </Grid>
                             </GridContainer> : null}
-                        {stateData.id == 1 ?
-                            <MaterialTable
-                                columns={[
-                                    { title: "时间", field: "timestamp" },
-                                    { title: "字幕", field: "transcript" }
-                                ]}
-                                data={
-                                    stateData.results.transcripts.map((row) => (
-                                        {
-                                            "timestamp": format_time(row.timestamp) + " - " + format_time(row.timestamp + row.duration),
-                                            "transcript": row.transcript
-                                        }
-                                    ))
-                                }
-                                title={"字幕信息"}
-                            >
-                            </MaterialTable> : null}
                         {stateData.id == 2 ? <div>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CardBody className={classes.sCard}>
-                                        语句数量{stateData.results.old_num_segs != undefined ? stateData.results.old_num_segs : 0}→{stateData.results.new_num_segs != undefined ? stateData.results.new_num_segs : 0}
+                            <Grid container direction="column">
+                                <Grid item container direction="row">
+                                    <GridItem xs={12} sm={12} md={6}>
+                                    <DataCard
+                                        primary={"片段数量变化"}
+                                        secondary={"整合后的字幕片段数量"}
+                                        data={stateData.results.old_num_segs + '→' + stateData.results.new_num_segs}
+                                    />
+                                    </GridItem>
+                                    <GridItem xs={12} sm={12} md={6}>
+                                    <DataCard
+                                        primary={"片段数量变化"}
+                                        secondary={"整合后的字幕片段数量"}
+                                        data={stateData.results.old_avg_seg_dur.toFixed(1) + '→' + stateData.results.new_avg_seg_dur.toFixed(1)}
+                                    />
+                                    </GridItem>
+                                </Grid>
+                                <Grid item container>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                        <Chart
+                                            data={stateData.results.histogram}
+                                        >
+                                            <ArgumentAxis />
+                                            <ValueAxis />
+                                            <BarSeries
+                                                name="处理后长度"
+                                                valueField="new"
+                                                argumentField="bucket_size"
+                                                color="#009688"
+                                            />
+                                            <BarSeries
+                                                name="处理前长度"
+                                                valueField="old"
+                                                argumentField="bucket_size"
+                                                color="#FFC107"
+                                            />
+                                            <Animation />
+                                            <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
+                                            <Stack />
+                                        </Chart>
+                                    </GridItem>
+                                </Grid>
 
-                                    </CardBody>
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CardBody className={classes.sCard}>
-                                        平均长度{stateData.results.old_avg_seg_dur != undefined ? stateData.results.old_avg_seg_dur : 0}→{stateData.results.new_avg_seg_dur != undefined ? stateData.results.new_avg_seg_dur : 0}
-
-                                    </CardBody>
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <Chart
-                                        data={stateData.results.histogram}
-                                    >
-                                        <ArgumentAxis />
-                                        <ValueAxis />
-                                        <BarSeries
-                                            name="处理后长度"
-                                            valueField="new"
-                                            argumentField="bucket_size"
-                                            color="#ffd700"
-                                        />
-                                        <BarSeries
-                                            name="处理前长度"
-                                            valueField="old"
-                                            argumentField="bucket_size"
-                                            color="#c0c0c0"
-                                        />
-                                        <Animation />
-                                        <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
-                                        <Title text="片段长度对比" />
-                                        <Stack />
-                                    </Chart>
-                                </GridItem>
-
-                            </GridContainer>
+                            </Grid>
                         </div> : null}
                         {stateData.id == 3 ? <div>
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={6}>
-                                    <CardBody className={classes.sCard}>
-                                        短视频数量{stateData.results.num_story != undefined ? stateData.results.num_story : 0}
-
-                                    </CardBody>
+                                    <DataCard
+                                        primary={"短视频数量"}
+                                        secondary={"切割好的具有完整语义且独立的短视频"}
+                                        data={stateData.results.num_story}
+                                    />
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={6}>
-                                    <CardBody className={classes.sCard}>
-                                        平均长度{stateData.results.avg_story_len != undefined ? stateData.results.avg_story_len : 0}
-
-                                    </CardBody>
+                                    <DataCard
+                                        primary={"平均长度"}
+                                        secondary={"短视频平均时长(秒）"}
+                                        data={stateData.results.avg_story_len}
+                                    />
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={12}>
 
@@ -379,7 +399,6 @@ class AnalyzePage extends React.Component {
                                                                                         color="textPrimary"
                                                                                     >
                                                                                     </Typography>
-                                                                                    {out.result.Subtitle}
                                                                                 </React.Fragment>
                                                                             }
                                                                         />

@@ -19,8 +19,9 @@ import VideocamIcon from '@material-ui/icons/Videocam';
 import Tooltip from '@material-ui/core/Tooltip';
 import Image from 'material-ui-image'
 import {format_time, getSearchResult} from 'api'
-
-
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
 
 import Time from 'react-time-format'
 
@@ -33,7 +34,7 @@ import video from "assets/video/03_linear-algebra-review.mp4"
 // Import for Video
 import "video-react/dist/video-react.css"; // import css
 import { Player } from 'video-react';
-import { List, ListItem,ListItemText, ListSubheader, ListItemAvatar, ListItemIcon } from '@material-ui/core';
+import { List, ListItem,  ListItemText, ListSubheader, ListItemAvatar, ListItemIcon } from '@material-ui/core';
 import fake_data from 'assets/json/clip.json'
 
 
@@ -73,7 +74,8 @@ class WatchComponent extends React.Component{
 
     this.state = {
       seg_result: results,
-      search_word : ""
+      search_word : "",
+      search_data: []
     }
 
     // Get the outlines for each story
@@ -219,6 +221,28 @@ class WatchComponent extends React.Component{
         </ul>
       </li>
     ))
+
+    let searchResults = this.state.search_data.map((elem, idx)=>(
+      <li key={`section-${idx}`} className={this.classes.listSection}>
+        <ListItem
+          button
+          onClick={
+            this.click.bind(this, elem.start)
+          }
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <PlayArrowIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={'...' +  elem.prev_phrase + ' [' + elem.word + '] ' + elem.next_phrase + '...'}
+            secondary={format_time(elem.start)}
+          />
+        </ListItem>
+      </li>
+      
+    ))
     
     return (
       <div>
@@ -255,10 +279,20 @@ class WatchComponent extends React.Component{
                           placeholder:"输入",
                           onChange:(event)=>{
                               console.log(event.target.value)
-                          }
+                              this.setState({
+                                search_data: getSearchResult(event.target.value, this.state.seg_result)
+                              })
+                          },
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              < SearchIcon/>
+                            </InputAdornment>
+                          )
                       }}
                     />
-                    {getSearchResult(this.state.search_word, this.state.seg_result)}
+            <List aria-label="contacts" subheader={<li />}>
+              {searchResults}
+            </List>
           </GridItem>:null}
         </GridContainer>
       </div>

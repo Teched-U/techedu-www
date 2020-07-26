@@ -38,7 +38,6 @@ import {
   hexToRgb
 } from "assets/jss/material-dashboard-react.js";
 
-import fake_data from 'assets/json/clip.json';
 
 const styles = {
   cardCategoryWhite: {
