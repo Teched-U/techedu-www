@@ -140,53 +140,14 @@ class WatchComponent extends React.Component{
   }
 
   render() {
-    let times=[{
-      word:"片段1",
-      start_time:11.4
-    },{
-      word:"片段2",
-      start_time:60.7
-    },{
-      word:"片段3",
-      start_time:100
-    },]
-    let other=[{
-      name:'assets/video/03_linear-algebra-review.mp4',
-      
-    },{
-      name:'assets/video/03_linear-algebra-review.mp4',
-      
-    },{
-      name:'assets/video/03_linear-algebra-review.mp4',
-      
-    },{
-      name:'assets/video/03_linear-algebra-review.mp4',
-      
-    },{
-      name:'assets/video/03_linear-algebra-review.mp4',
-      
-    },{
-      name:'assets/video/03_linear-algebra-review.mp4',
-      
-    },]
-    other = []
-    const result=[{
-      keyword:"...时间管理非常的重要...",
-      time:"12:00"
-    },{
-      keyword:"...下面就请罗老师给大家来讲一段时间管理...",
-      time:"15:01"
-    }]
-    if(this.props.segresult.story_list!=undefined){
-      times=this.props.segresult.story_list[0].words;
-    }
-
 
     let story_list_elems = this.story_outlines.map((story, story_idx) => (
       <li key={`section-${story_idx}`} className={this.classes.listSection}>
         <ul className={this.classes.ul}>
           <ListSubheader color={'primary'}>
-            <ListItem>
+            <ListItem button onClick={
+                this.click.bind(this, story.timestamp)
+            }>
               <ListItemIcon>
                 <VideocamIcon />
               </ListItemIcon>

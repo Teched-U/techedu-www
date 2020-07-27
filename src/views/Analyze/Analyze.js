@@ -261,8 +261,8 @@ class AnalyzePage extends React.Component {
                                     </GridItem>
                                     <GridItem xs={12} sm={12} md={6}>
                                     <DataCard
-                                        primary={"片段数量变化"}
-                                        secondary={"整合后的字幕片段数量"}
+                                        primary={"片段长度"}
+                                        secondary={"整合后的字幕片段长度(秒)"}
                                         data={stateData.results.old_avg_seg_dur.toFixed(1) + '→' + stateData.results.new_avg_seg_dur.toFixed(1)}
                                     />
                                     </GridItem>
@@ -308,7 +308,7 @@ class AnalyzePage extends React.Component {
                                     <DataCard
                                         primary={"平均长度"}
                                         secondary={"短视频平均时长(秒）"}
-                                        data={stateData.results.avg_story_len}
+                                        data={stateData.results.avg_story_len.toFixed(1)}
                                     />
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={12}>
@@ -327,10 +327,10 @@ class AnalyzePage extends React.Component {
                                                     />
                                                     <CardContent>
                                                         <Typography gutterBottom variant="h5" component="h2">
-                                                            短视频{(index + 1)}
+                                                            短视频{(index + 1)} : {format_time(row.timestamp)} - {format_time(row.timestamp+ row.duration)}
                                                         </Typography>
                                                         <Typography variant="body2" color="textSecondary" component="p">
-                                                            {row.timestamp}
+                                                            {row.summary}
                                                         </Typography>
                                                     </CardContent>
                                                 </CardActionArea>
@@ -344,23 +344,25 @@ class AnalyzePage extends React.Component {
                         {stateData.id == 4 ? <div>
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={6}>
-                                    <CardBody className={classes.sCard}>
-                                        短视频数量{stateData.results.num_story != undefined ? stateData.results.num_story : 0}
-
-                                    </CardBody>
+                                    <DataCard
+                                        primary={"短视频数量"}
+                                        secondary={"切割好的完整短视频数量"}
+                                        data={stateData.results.num_story}
+                                    />
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={6}>
-                                    <CardBody className={classes.sCard}>
-                                        平均长度{stateData.results.avg_story_len != undefined ? stateData.results.avg_story_len : 0}
-
-                                    </CardBody>
+                                    <DataCard
+                                        primary={"短视频均长"}
+                                        secondary={"切割好的完整短视频长度（秒）"}
+                                        data={stateData.results.avg_story_len.toFixed(1)}
+                                    />
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <List>
                                         {stateData.results.story_list != undefined ?
                                             stateData.results.story_list.map((row, index) => (
                                                 <div>
-                                                    <Grid container>
+                                                    <Grid container alignContent="space-around">
                                                         <Grid item xs={12} sm={12} md={6}>
                                                             <Card className={classes.root}>
                                                                 <CardActionArea>
@@ -382,6 +384,10 @@ class AnalyzePage extends React.Component {
                                                             </Card>
                                                         </Grid>
                                                         <Grid item md={6}>
+                                                            <Typography
+                                                                variant="h5">
+                                                                    视频大纲
+                                                            </Typography>
                                                             <List>
                                                                 {row.outline.map((out) => (
                                                                     <ListItem alignItems="flex-start">
