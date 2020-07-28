@@ -177,7 +177,14 @@ class DemoPage extends React.Component {
                 disconnect={this.state.disconnect}
               >
               </AnalysisComponent>
-              <Button style={{width:"150px",fontSize:"20px",marginTop:"-25px",float:"right"}} variant="outlined" onClick={this.toggleVideo.bind(this,true)}>查看视频</Button>
+              {(this.state.modelView)?
+                <Button
+                  style={{ width: "150px", fontSize: "20px", marginTop: "-25px", float: "right" }}
+                  variant="outlined"
+                  onClick={this.toggleVideo.bind(this, true)}>
+                  查看视频
+                  </Button>
+                : null}
             </CardBody>
           </Card>
         </GridContainer>
@@ -191,7 +198,7 @@ class DemoPage extends React.Component {
           <GridContainer>
             <Card>
               <CardHeader>
-              <Button className={classes.box} style={{width:"50px",fontSize:"20px",background:"rgba(1,1,1,0)",marginTop:"-1px",fontWeight:"bold"}}  variant="outlined" onClick={this.toggleVideo.bind(this,false)}><ArrowBackIcon></ArrowBackIcon></Button><h4 style={{display:"inline"}} className={classes.cardTitleWhite}>切割视频展示</h4>
+                  <Button className={classes.box} style={{ width: "50px", fontSize: "20px", background: "rgba(1,1,1,0)", marginTop: "-1px", fontWeight: "bold" }} variant="outlined" onClick={this.toggleVideo.bind(this, false)}><ArrowBackIcon></ArrowBackIcon></Button><h4 style={{ display: "inline" }} className={classes.cardTitleWhite}>切割视频展示</h4>
               <Divider />
               </CardHeader>
               <CardBody>

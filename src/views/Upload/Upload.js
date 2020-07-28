@@ -21,7 +21,7 @@ export default function UploadComponent(props) {
         } else {
           // Send the video for processing if API enabled
           superagent
-            .post('/api'+'/upload')
+            .post(ENDPOINT+ '/api'+'/upload')
             .attach('upload_file', file)
             .end((err, res) => {
               console.log(res.body);
