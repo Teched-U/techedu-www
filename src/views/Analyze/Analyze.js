@@ -39,6 +39,7 @@ import {
   BarSeries,
   Title,
   Legend,
+  PieSeries,
 } from "@devexpress/dx-react-chart-material-ui";
 import { Stack, Animation } from "@devexpress/dx-react-chart";
 import DataCard from "./DataCard.js";
@@ -206,12 +207,10 @@ class AnalyzePage extends React.Component {
             </p>
           </CardHeader>
           <CardBody>
-            {/* <h3>
-                            阶段: {stateData.state}
-                        </h3>
-                        <p>
-                            数据： {JSON.stringify(stateData.results,null, 2)}
-                        </p> */}
+            {/*
+            <h3>阶段: {stateData.state}</h3>
+            <p>数据： {JSON.stringify(stateData.results, null, 2)}</p>
+            */}
 
             {stateData.id == 1 ? (
               <GridContainer spacing={4} direction="column">
@@ -311,30 +310,16 @@ class AnalyzePage extends React.Component {
                     </GridItem>
                   </Grid>
                   <Grid item container>
-                    <GridItem xs={12} sm={12} md={12}>
-                      <Chart data={stateData.results.histogram}>
-                        <ArgumentAxis />
-                        <ValueAxis />
-                        <BarSeries
-                          name="处理前长度"
-                          valueField="old"
-                          argumentField="bucket_size"
-                          color="#9fa8da"
-                        />
-                        <BarSeries
-                          name="处理后长度"
-                          valueField="new"
-                          argumentField="bucket_size"
-                          color="#3f51b5"
-                        />
-
-                        <Animation />
-                        <Legend
-                          position="bottom"
-                          rootComponent={Root}
-                          labelComponent={Label}
-                        />
-                        <Stack />
+                    <GridItem xs={12} sm={12} md={6}>
+                      <Chart data={stateData.results.old_durations}>
+                        <PieSeries valueField="value" argumentField="index" />
+                        <Title text="整合前" />
+                      </Chart>
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={6}>
+                      <Chart data={stateData.results.new_durations}>
+                        <PieSeries valueField="value" argumentField="index" />
+                        <Title text="整合后" />
                       </Chart>
                     </GridItem>
                   </Grid>
