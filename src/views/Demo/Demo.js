@@ -37,7 +37,7 @@ import {
   grayColor,
   hexToRgb
 } from "assets/jss/material-dashboard-react.js";
-
+import Divider from '@material-ui/core/Divider';
 
 const styles = {
   cardCategoryWhite: {
@@ -150,8 +150,9 @@ class DemoPage extends React.Component {
         {/* 视频上传部分 */}
         {this.state.videoView==false?<GridContainer>
           <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>上传视频</h4>
+            <CardHeader >
+              <h3 className={classes.cardTitleWhite} style={{fontWeight:"bold"}}>上传视频</h3>
+              <Divider />
             </CardHeader>
             <CardBody>
               <UploadComponent onUpload={(a, b) => this.handleUploadFile(a,b)}></UploadComponent>
@@ -163,9 +164,10 @@ class DemoPage extends React.Component {
         {/* 模型数据展示部分*/}
         {(!!this.state.video_name)?<GridContainer>
           <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>模型输出数据</h4>
-            </CardHeader>
+            <CardHeader>
+              <h3 className={classes.cardTitleWhite}  style={{fontWeight:"bold"}}>模型输出数据</h3>
+              <Divider />
+            </CardHeader>            
             <CardBody>
               <AnalysisComponent
                 videoName={this.state.video_name}
@@ -188,8 +190,9 @@ class DemoPage extends React.Component {
           
           <GridContainer>
             <Card>
-              <CardHeader color="primary">
-              <Button className={classes.box} style={{width:"50px",fontSize:"20px",background:"rgba(1,1,1,0)",marginTop:"-1px"}}  variant="outlined" onClick={this.toggleVideo.bind(this,false)}><ArrowBackIcon></ArrowBackIcon></Button><h4 style={{display:"inline"}} className={classes.cardTitleWhite}>切割视频展示</h4>
+              <CardHeader>
+              <Button className={classes.box} style={{width:"50px",fontSize:"20px",background:"rgba(1,1,1,0)",marginTop:"-1px",fontWeight:"bold"}}  variant="outlined" onClick={this.toggleVideo.bind(this,false)}><ArrowBackIcon></ArrowBackIcon></Button><h4 style={{display:"inline"}} className={classes.cardTitleWhite}>切割视频展示</h4>
+              <Divider />
               </CardHeader>
               <CardBody>
                 <WatchComponent

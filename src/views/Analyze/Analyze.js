@@ -57,11 +57,12 @@ const Label = withStyles(legendLabelStyles, { name: 'LegendLabel' })(legendLabel
 const styles = {
     cardCategoryWhite: {
         "&,& a,& a:hover,& a:focus": {
-            color: "rgba(255,255,255,.62)",
+            //color: "rgba(255,255,255,.62)",
+            color:"black",
             margin: "0",
             fontSize: "14px",
             marginTop: "0",
-            marginBottom: "0"
+            marginBottom: "10px"
         },
         "& a,& a:hover,& a:focus": {
             color: "#FFFFFF"
@@ -174,8 +175,8 @@ class AnalyzePage extends React.Component {
         if (this.props.segUpdate.length > 0) {
             stories = this.props.segUpdate.map((stateData) =>
                 <Card>
-                    <CardHeader color="primary">
-                        <h3 style={{ marginTop: 0 }}>
+                    <CardHeader>
+                        <h3 style={{ marginTop: 0,fontWeight:"bold" }}>
                             {stateData.state}
                         </h3>
                         <p className={classes.cardCategoryWhite}>
@@ -184,6 +185,7 @@ class AnalyzePage extends React.Component {
                             {stateData.id == 3 ? "通过BERT + TopicNet提取多摸态信息，生成完整的短视频" : ""}
                             {stateData.id == 4 ? "基于关键帧提取算法和大纲提取模块，对切割好的短视频建立大纲" : ""}
                         </p>
+                        <Divider />
                     </CardHeader>
                     <CardBody>
                         {/* <h3>
