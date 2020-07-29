@@ -27,9 +27,10 @@ export default function UploadComponent(props) {
               console.log(res.body);
               video_name = res.body.path;
               video_url= res.body.video_url;
+              let estimated_time = res.body.estimated_time;
               // connectSocket((socket,res)=>{
               //   console.log(res);
-                 props.onUpload(video_name, video_url)
+                 props.onUpload(video_name, video_url, estimated_time)
               //   disconnectSocket(socket);
               // },video_name)
             });

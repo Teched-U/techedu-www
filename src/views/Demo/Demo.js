@@ -6,6 +6,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
+import superagent from 'superagent';
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -17,7 +18,7 @@ import Search from "@material-ui/icons/Search";
 import avatar from "assets/img/faces/marc.jpg";
 import xiaoxin from "assets/img/xiaoxin.jpg";
 import video from "assets/video/03_linear-algebra-review.mp4"
-import { List, ListItem,ListItemText } from '@material-ui/core';
+import { List, ListItem,ListItemText, Typography } from '@material-ui/core';
 
 // Import for Video
 import "video-react/dist/video-react.css"; // import css
@@ -25,6 +26,8 @@ import { Player } from 'video-react';
 import { render } from "react-dom";
 import {getSegResult, getSearchResult} from 'api';
 import { Grid } from "@material-ui/core";
+import {ENDPOINT} from 'api.js';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 
 // Dependency for Upload
@@ -48,7 +51,7 @@ const styles = {
     marginBottom: "0"
   },
   cardTitleWhite: {
-    color: "#FFFFFF",
+    color: "#1a237e",
     marginTop: "0px",
     minHeight: "auto",
     fontWeight: "300",
@@ -58,23 +61,28 @@ const styles = {
   }
 };
 
-const useStyles = makeStyles(styles);
-
-
 
 
 class DemoPage extends React.Component {
   constructor(props) {
     super(props);
-    let video_name = 'clip.mp4';
+    console.log(props)
+
+    let video_name = ''
+    let video_url = ''
+
+    if(props.location.state) {
+      video_name = props.location.state.video_name;
+      video_url = props.location.state.video_url;
+    }
     this.state = {
       input: '',
       searchResult: [],
       
       // Upload state 
-      video_name: '',
-      //video_name: 'clip.mp4',
-      video_url: '',
+      video_name: video_name,
+      //video_name: '07_regularization.mp4',
+      video_url: video_url,
 
       disconnect: false,
 
@@ -85,20 +93,43 @@ class DemoPage extends React.Component {
       modelView:false,
 
       videoView: false,
+
+      estimated_time: null,
+
       //videoView: true
     }
+  }
+
+  cancelNow() {
+    console.log("Cancelling " + this.state.video_name)
+    superagent
+    .get(ENDPOINT+'/api/cancel/'+this.state.video_name)
+    .then(res=> {
+      console.log(res.body)
+      // Toggle the UI view here
+    })
+    .catch(err => {
+      console.log('Cancel failed: ')
+      console.log(err)
+      // Toggle the UI view here
+    })
+
+    this.setState({
+      video_name: ''
+    })
   }
 
   /**
    *  Logic for upload Component
    */
-   handleUploadFile(video_name, video_url) {
+   handleUploadFile(video_name, video_url, estimated_time) {
      console.log('Upload Video :' + video_name)
      console.log('Video URL: ' + video_url)
 
      this.setState({
        video_name: video_name,
-       video_url: video_url
+       video_url: video_url,
+       estimated_time: estimated_time
      });
    }
 
@@ -144,18 +175,17 @@ class DemoPage extends React.Component {
     }
   render() {
     const { classes } = this.props
-
     return (
       <div>
         {/* 视频上传部分 */}
-        {this.state.videoView==false?<GridContainer>
+        {(!this.state.video_name)?<GridContainer>
           <Card>
             <CardHeader >
               <h3 className={classes.cardTitleWhite} style={{fontWeight:"bold"}}>上传视频</h3>
               <Divider />
             </CardHeader>
             <CardBody>
-              <UploadComponent onUpload={(a, b) => this.handleUploadFile(a,b)}></UploadComponent>
+              <UploadComponent onUpload={(a, b, c) => this.handleUploadFile(a,b, c)}></UploadComponent>
             </CardBody>
           </Card>
         </GridContainer>:null
@@ -165,7 +195,31 @@ class DemoPage extends React.Component {
         {(!!this.state.video_name)?<GridContainer>
           <Card>
             <CardHeader>
-              <h3 className={classes.cardTitleWhite}  style={{fontWeight:"bold"}}>模型输出数据</h3>
+              <Grid container justify="space-between">
+                <Grid item md={4}>
+                  <h3 className={classes.cardTitleWhite} style={{ fontWeight: "bold" }}>模型输出数据</h3>
+                </Grid>
+                {(this.state.estimated_time<0)?
+                <Typography variant="title2" color="error">
+                  无法打开视频,请检查视频格式!
+                </Typography>
+                :null}
+                {(!this.state.modelView) ? <Grid>
+                  {(this.state.estimated_time > 0)?
+                  <Typography variant="body2" color="primary">
+                    预计时间: {(this.state.estimated_time / 60).toFixed(1)} 分钟
+                  </Typography>
+                  : null}
+                  <LinearProgress />
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => this.cancelNow()}>
+                      取消分析
+                  </Button>
+                </Grid>:null}
+              </Grid>
+              
               <Divider />
             </CardHeader>            
             <CardBody>
@@ -220,4 +274,4 @@ class DemoPage extends React.Component {
     );
   }
 }
-export default withStyles(useStyles)(DemoPage)
+export default withStyles(styles)(DemoPage);

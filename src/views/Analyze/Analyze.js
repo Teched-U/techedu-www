@@ -26,6 +26,7 @@ import {
     BarSeries,
     Title,
     Legend,
+    PieSeries,
 } from '@devexpress/dx-react-chart-material-ui';
 import { Stack, Animation } from '@devexpress/dx-react-chart';
 import DataCard from './DataCard.js'
@@ -270,27 +271,16 @@ class AnalyzePage extends React.Component {
                                     </GridItem>
                                 </Grid>
                                 <Grid item container>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                        <Chart
-                                            data={stateData.results.histogram}
-                                        >
-                                            <ArgumentAxis />
-                                            <ValueAxis />
-                                            <BarSeries
-                                                name="处理后长度"
-                                                valueField="new"
-                                                argumentField="bucket_size"
-                                                color="#009688"
-                                            />
-                                            <BarSeries
-                                                name="处理前长度"
-                                                valueField="old"
-                                                argumentField="bucket_size"
-                                                color="#FFC107"
-                                            />
-                                            <Animation />
-                                            <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
-                                            <Stack />
+                                    <GridItem xs={12} sm={12} md={6}>
+                                        <Chart data={stateData.results.old_durations}>
+                                            <PieSeries valueField="value" argumentField="index" />
+                                            <Title text="整合前" />
+                                        </Chart>
+                                    </GridItem>
+                                    <GridItem xs={12} sm={12} md={6}>
+                                        <Chart data={stateData.results.new_durations}>
+                                            <PieSeries valueField="value" argumentField="index" />
+                                            <Title text="整合后" />
                                         </Chart>
                                     </GridItem>
                                 </Grid>
@@ -313,10 +303,11 @@ class AnalyzePage extends React.Component {
                                         data={stateData.results.avg_story_len.toFixed(1)}
                                     />
                                 </GridItem>
-                                <GridItem xs={12} sm={12} md={12}>
+                                <Grid container xs={12} sm={12} md={12} justify="space-evenly">
 
                                     {stateData.results.story_list != undefined ?
                                         stateData.results.story_list.map((row, index) => (
+                                            <Grid item>
                                             <Card className={classes.root} style={{
                                                 display: "inline-block",
                                                 marginRight: "30px"
@@ -331,6 +322,9 @@ class AnalyzePage extends React.Component {
                                                         <Typography gutterBottom variant="h5" component="h2">
                                                             短视频{(index + 1)} : {format_time(row.timestamp)} - {format_time(row.timestamp+ row.duration)}
                                                         </Typography>
+                                                        <Typography variant="caption">
+                                                            智能语音缩写:
+                                                        </Typography>
                                                         <Typography variant="body2" color="textSecondary" component="p">
                                                             {row.summary}
                                                         </Typography>
@@ -338,8 +332,9 @@ class AnalyzePage extends React.Component {
                                                 </CardActionArea>
 
                                             </Card>
+                                            </Grid>
                                         )) : null}
-                                </GridItem>
+                                </Grid>
                             </GridContainer>
                         </div> : null}
 
@@ -429,7 +424,6 @@ class AnalyzePage extends React.Component {
         return (
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
-                    {this.state.done && <CircularProgress style={{ float: "right" }} color="secondary" />}
 
                     {
                         stories

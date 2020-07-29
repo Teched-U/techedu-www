@@ -34,7 +34,6 @@ export default function Product(props) {
                             产品介绍
                         </Typography>
                         <Card className={classes.root}>
-                    <CardActionArea>
                         
                         <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">
@@ -44,10 +43,8 @@ export default function Product(props) {
                             网站支持的文件格式包括mp4，mov
                         </Typography>
                         </CardContent>
-                    </CardActionArea>
                     </Card>
                     <Card className={classes.root}>
-                    <CardActionArea>
                         
                         <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">
@@ -57,10 +54,8 @@ export default function Product(props) {
                             视频分析结果会以词云及图表的方式展示
                         </Typography>
                         </CardContent>
-                    </CardActionArea>
                     </Card>
                     <Card className={classes.root}>
-                    <CardActionArea>
                         
                         <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">
@@ -70,7 +65,6 @@ export default function Product(props) {
                             观看更少的视频，学习更多的知识
                         </Typography>
                         </CardContent>
-                    </CardActionArea>
                     </Card>
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>

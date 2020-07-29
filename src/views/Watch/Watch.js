@@ -22,6 +22,7 @@ import {format_time, getSearchResult} from 'api'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import { VariableSizeList } from 'react-window';
 
 import Time from 'react-time-format'
 
@@ -209,7 +210,7 @@ class WatchComponent extends React.Component{
       <div>
         <GridContainer>
           <GridItem xs={12} sm={12} md={4}>
-            <List aria-label="contacts" subheader={<li />}>
+            <List>
               {story_list_elems}
             </List>
           </GridItem>

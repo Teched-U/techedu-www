@@ -44,6 +44,7 @@ import UploadPage from "views/Upload/Upload.js"
 import AnalyzePage from "views/Analyze/Analyze.js"
 import DemoPage from "views/Demo/Demo.js"
 import Product from "views/product/product.js"
+import Result from "views/Results/Result.js"
 
 const dashboardRoutes = [
   //{
@@ -63,9 +64,16 @@ const dashboardRoutes = [
 }, 
   {
     path: "/demo",
-    name: "数据结果",
+    name: "上传视频",
     icon: "devices",
     component: DemoPage,
+    layout: "/admin"
+  }, 
+  {
+    path: "/results",
+    name: "结果展示",
+    icon: "info",
+    component: Result,
     layout: "/admin"
   }, 
   // {

@@ -33,6 +33,8 @@
     "react-scripts": "3.4.1",
     "react-swipeable-views": "0.13.9",
     "react-tree-graph": "^5.1.0",
+    "react-virtualized": "^9.21.2",
+    "react-window": "^1.8.5",
     "redux": "^4.0.5",
     "socket.io-client": "^2.3.0",
     "superagent": "^5.3.1",
