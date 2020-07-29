@@ -180,7 +180,7 @@ class DemoPage extends React.Component {
         {/* 视频上传部分 */}
         {(!this.state.video_name)?<GridContainer>
           <Card>
-            <CardHeader >
+            <CardHeader color="primary" >
               <h3 className={classes.cardTitleWhite} style={{fontWeight:"bold"}}>上传视频</h3>
               <Divider />
             </CardHeader>
@@ -194,7 +194,7 @@ class DemoPage extends React.Component {
         {/* 模型数据展示部分*/}
         {(!!this.state.video_name)?<GridContainer>
           <Card>
-            <CardHeader>
+            <CardHeader >
               <Grid container justify="space-between">
                 <Grid item md={4}>
                   <h3 className={classes.cardTitleWhite} style={{ fontWeight: "bold" }}>模型输出数据</h3>
