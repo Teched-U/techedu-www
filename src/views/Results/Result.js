@@ -48,8 +48,8 @@ export default function Result(props) {
     return (
         <div>
             <Card>
-                <CardHeader>
-                    <Typography variant="h4" color="primary">
+                <CardHeader color="primary">
+                    <Typography variant="h4" color="white">
                         切割视频展示
                     </Typography>
                 </CardHeader>

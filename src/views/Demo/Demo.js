@@ -51,7 +51,7 @@ const styles = {
     marginBottom: "0"
   },
   cardTitleWhite: {
-    color: "#1a237e",
+    color: "white",
     marginTop: "0px",
     minHeight: "auto",
     fontWeight: "300",
@@ -197,7 +197,9 @@ class DemoPage extends React.Component {
             <CardHeader >
               <Grid container justify="space-between">
                 <Grid item md={4}>
-                  <h3 className={classes.cardTitleWhite} style={{ fontWeight: "bold" }}>模型输出数据</h3>
+                  <Typography variant="h4" color="primary" style={{fontWeight:"bold"}}>
+                    模型输出数据
+                    </Typography>
                 </Grid>
                 {(this.state.estimated_time<0)?
                 <Typography variant="title2" color="error">
@@ -252,7 +254,7 @@ class DemoPage extends React.Component {
           <GridContainer>
             <Card>
               <CardHeader>
-                  <Button className={classes.box} style={{ width: "50px", fontSize: "20px", background: "rgba(1,1,1,0)", marginTop: "-1px", fontWeight: "bold" }} variant="outlined" onClick={this.toggleVideo.bind(this, false)}><ArrowBackIcon></ArrowBackIcon></Button><h4 style={{ display: "inline" }} className={classes.cardTitleWhite}>切割视频展示</h4>
+                  <Button className={classes.box} style={{ width: "50px", fontSize: "20px", background: "rgba(1,1,1,0)", marginTop: "-1px", fontWeight: "bold" }} variant="outlined" onClick={this.toggleVideo.bind(this, false)}><ArrowBackIcon></ArrowBackIcon></Button><Typography color="primary" variant="h4" style={{display: 'inline'}} >切割视频展示</Typography> 
               <Divider />
               </CardHeader>
               <CardBody>
