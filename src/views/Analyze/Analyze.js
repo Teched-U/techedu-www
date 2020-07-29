@@ -270,6 +270,29 @@ class AnalyzePage extends React.Component {
                                     </GridItem>
                                 </Grid>
                                 <Grid item container>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                        <Chart
+                                            data={stateData.results.histogram}
+                                        >
+                                            <ArgumentAxis />
+                                            <ValueAxis />
+                                            <BarSeries
+                                                name="处理后长度"
+                                                valueField="new"
+                                                argumentField="bucket_size"
+                                                color="#009688"
+                                            />
+                                            <BarSeries
+                                                name="处理前长度"
+                                                valueField="old"
+                                                argumentField="bucket_size"
+                                                color="#FFC107"
+                                            />
+                                            <Animation />
+                                            <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
+                                            <Stack />
+                                        </Chart>
+                                    </GridItem>
                                     <GridItem xs={12} sm={12} md={6}>
                                         <Chart data={stateData.results.old_durations}>
                                             <PieSeries valueField="value" argumentField="index" />
