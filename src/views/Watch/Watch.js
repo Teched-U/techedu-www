@@ -22,7 +22,6 @@ import {format_time, getSearchResult} from 'api'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
-import { VariableSizeList } from 'react-window';
 
 import Time from 'react-time-format'
 
