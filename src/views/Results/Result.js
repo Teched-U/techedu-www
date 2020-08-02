@@ -1,18 +1,27 @@
 import React, {useState, useEffect} from 'react';
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
+// import Card from "components/Card/Card.js";
+// import CardHeader from "components/Card/CardHeader.js";
+// import CardBody from "components/Card/CardBody.js";
+// import GridContainer from "components/Grid/GridContainer.js";
+//import GridItem from "components/Grid/GridItem.js";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Button from "components/CustomButtons/Button.js";
 import { useHistory } from "react-router-dom";
 import { Grid, Typography} from "@material-ui/core";
 import MaterialTable from "material-table";
+import GridItem from "components/Grid/GridItem.js";
+import GridContainer from "components/Grid/GridContainer.js";
 import superagent from 'superagent';
 import {ENDPOINT} from 'api';
-
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Divider from '@material-ui/core/Divider';
+//import Button from '@material-ui/core/Button';
+//import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
     root: {
       maxWidth: "90%",
@@ -30,7 +39,7 @@ export default function Result(props) {
     const classes = useStyles();
   
     const click=(row)=>{
-        history.push("/admin/demo", {video_name: row.video_name, video_url: row.video_url})
+        history.push("/admin/result-detail", {video_name: row.video_name, video_url: row.video_url})
     }
 
     const [results, setResults] = useState([])
@@ -38,6 +47,7 @@ export default function Result(props) {
         superagent
             .get(ENDPOINT + '/api/results')
             .then(res => {
+                console.log(res.body.result_list)
                 setResults(res.body.result_list)
             })
             .catch(err => {
@@ -47,7 +57,7 @@ export default function Result(props) {
 
     return (
         <div>
-            <Card>
+            {/* <Card>
                 <CardHeader color="primary">
                     <Typography variant="h4" color="white">
                         切割视频展示
@@ -89,7 +99,34 @@ export default function Result(props) {
                         </Grid>
                     </GridContainer>
                 </CardBody>
-            </Card>
+            </Card> */}
+            <GridContainer>
+                {results.map((row)=>(
+                    <GridItem xs={12} sm={6} md={4}>
+                        <Card onClick={click.bind(this, row)}>
+                        <CardActionArea>
+                            <CardMedia
+                            component="img"
+                            alt="Contemplative Reptile"
+                            height="140"
+                            image={row.thumbnail!=undefined?row.thumbnail:require("assets/img/xiaoxin.jpg")}
+                            title={row.video_name}
+                            />
+                            <CardContent>
+                            <Typography gutterBottom variant="h6" component="h2">
+                            {row.video_name.split(".")[0]}  <span style={{fontWeight:400,fontSize:"14px"}}>{(row.duration / 60).toFixed(1) + '分钟'}</span>
+                            </Typography>
+                            <Divider />
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                {row.video_url}
+                            </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                        </Card>
+                    </GridItem>
+                ))}
+                
+            </GridContainer>
       </div>
     
   );

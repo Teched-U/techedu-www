@@ -45,7 +45,7 @@ import AnalyzePage from "views/Analyze/Analyze.js"
 import DemoPage from "views/Demo/Demo.js"
 import Product from "views/product/product.js"
 import Result from "views/Results/Result.js"
-
+import ResultDetail from "views/ResultDetail/ResultDetail.js"
 const dashboardRoutes = [
   //{
   //  path: "/explore",
@@ -74,6 +74,13 @@ const dashboardRoutes = [
     name: "结果展示",
     icon: "info",
     component: Result,
+    layout: "/admin"
+  }, 
+  {
+    path: "/result-detail",
+    name: "结果展示",
+    icon: "info",
+    component: ResultDetail,
     layout: "/admin"
   }, 
   // {

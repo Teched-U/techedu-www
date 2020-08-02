@@ -17,7 +17,9 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
 import bgImage from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/TU-8.png";
-
+import { useHistory } from "react-router-dom";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Button from "components/CustomButtons/Button.js";
 let ps;
 
 const switchRoutes = (
@@ -43,6 +45,8 @@ const useStyles = makeStyles(styles);
 export default function Admin({ ...rest }) {
   // styles
   const classes = useStyles();
+  let history = useHistory();
+  console.log(history)
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
   // states and functions
@@ -74,6 +78,10 @@ export default function Admin({ ...rest }) {
       setMobileOpen(false);
     }
   };
+
+  const click=(row)=>{
+    history.push("/admin/results")
+  }
   // initialize and destroy the PerfectScrollbar plugin
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -92,10 +100,13 @@ export default function Admin({ ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
+  const sideMenu=[];
+  Object.assign(sideMenu,routes);
+  sideMenu.length=sideMenu.length-1;
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={routes}
+        routes={sideMenu}
         logoText={"Teched U"}
         logo={logo}
         image={image}
@@ -105,6 +116,7 @@ export default function Admin({ ...rest }) {
         {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>
+      {history.location.pathname=="/admin/result-detail"?<ArrowBackIcon onClick={click.bind(this)}></ArrowBackIcon>:null}
         {/* <Navbar
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
