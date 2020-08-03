@@ -46,7 +46,6 @@ export default function Admin({ ...rest }) {
   // styles
   const classes = useStyles();
   let history = useHistory();
-  console.log(history)
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
   // states and functions
@@ -102,7 +101,7 @@ export default function Admin({ ...rest }) {
   }, [mainPanel]);
   const sideMenu=[];
   Object.assign(sideMenu,routes);
-  sideMenu.length=sideMenu.length-1;
+  sideMenu.pop();
   return (
     <div className={classes.wrapper}>
       <Sidebar

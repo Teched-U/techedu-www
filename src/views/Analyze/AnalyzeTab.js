@@ -95,8 +95,8 @@ const styles = {
             //color: "rgba(255,255,255,.62)",
             margin: "0",
             fontSize: "14px",
-            marginTop: "10px",
-            marginBottom: "10px"
+            padding:"10px 15px",
+            background:"#f3f3f3",border:"1px solid #cacaca",borderRadius:"5px"
         },
         "& a,& a:hover,& a:focus": {
             color: "#FFFFFF"
@@ -131,6 +131,9 @@ const styles = {
     inline: {
         display: 'inline',
     },
+    iconDiv:{
+        float:"left",borderRadius:"16px",background:"#333333",width:"16px",textAlign:"center",height:"16px",marginTop:"4px",marginRight:"8px"
+    }
 };
 
 
@@ -490,12 +493,15 @@ class AnalyzePage extends React.Component {
                 <GridItem xs={12} sm={12} md={12}>
                     <div>
                     {/* <AppBar position="static"> */}
-                        <Tabs value={this.state.tabShow} onChange={this.handleChange.bind(this)} aria-label="simple tabs example">
+                        <Tabs value={this.state.tabShow} onChange={this.handleChange.bind(this)} aria-label="simple tabs example" indicatorColor="primary"
+    textColor="primary">
                         <Tab label="字幕信息处理" {...a11yProps(0)} />
                         <Tab label="片段整合阶段" {...a11yProps(1)} />
                         <Tab label="短视频切割" {...a11yProps(2)} />
                         <Tab label="大纲提取" {...a11yProps(2)} />
-                        <p className={classes.cardCategoryWhite}>
+                        <p className={classes.cardCategoryWhite} style={{position: "absolute",
+    right: "11px"}}>
+                            <div className={classes.iconDiv}><img src={require('assets/img/i.png')}></img></div>
                             {this.state.tabShow == 0 ? "通过Google Speech-To——text API 获取视频音频信息中..." : ""}
                             {this.state.tabShow == 1 ? "根据视频的大纲信息整合字幕片段，大纲信息相同的字幕片段将会被整合到一起" : ""}
                             {this.state.tabShow == 2 ? "通过BERT + TopicNet提取多摸态信息，生成完整的短视频" : ""}

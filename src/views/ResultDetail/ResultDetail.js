@@ -204,7 +204,7 @@ class DemoPage extends React.Component {
         </div>
         :null
       }
-        {/* 视频上传部分 */}
+        {/* 视频上传部分 
         {(!this.state.video_name)?<GridContainer>
           <Card>
             <CardHeader color="primary" >
@@ -217,15 +217,16 @@ class DemoPage extends React.Component {
           </Card>
         </GridContainer>:null
         }
-
+*/}
         {/* 模型数据展示部分*/}
         {(!!this.state.video_name)?<GridContainer>
           <Card>
             <CardHeader >
               <Grid container justify="space-between">
                 <Grid item md={4}>
-                  <Typography variant="h4" color="primary" style={{fontWeight:"bold"}}>
-                    模型输出数据
+                  <Typography variant="h4"  style={{fontWeight:"bold"}}>
+                  <Divider orientation="vertical" flexItem style={{width:"4px",height:"40px",float:"left",background:"#2981ee",marginRight:"20px"}} />
+                  模型输出数据
                     </Typography>
                 </Grid>
                 {(this.state.estimated_time<0)?

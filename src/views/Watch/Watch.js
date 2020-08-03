@@ -165,7 +165,9 @@ class WatchComponent extends React.Component{
                   imageStyle={{ width: 300, height: 'inherit' }}
                 />
               </React.Fragment>
-            }>
+            }
+            placement="left-end"
+            >
               <ListItem key={`item-${story_idx}-${item_idx}`} button onClick={
                 this.click.bind(this, item.timestamp)
               }>
@@ -208,15 +210,8 @@ class WatchComponent extends React.Component{
     return (
       <div>
         <GridContainer>
-          <GridItem xs={12} sm={12} md={4}>
-            <List>
-              {story_list_elems}
-            </List>
-          </GridItem>
           <GridItem xs={12} sm={12} md={8}>
             <Card>
-              <CardHeader color="primary">
-              </CardHeader>
               <CardBody>
                 <Player
                   playsInline
@@ -228,6 +223,12 @@ class WatchComponent extends React.Component{
               </CardBody>
             </Card>
           </GridItem>
+          <GridItem xs={12} sm={12} md={4}>
+            <List>
+              {story_list_elems}
+            </List>
+          </GridItem>
+         
           {true?<GridItem xs={12} sm={12} md={12}>
             <CustomInput
                       labelText=""

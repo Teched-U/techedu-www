@@ -102,7 +102,7 @@ export default function Result(props) {
             </Card> */}
             <GridContainer>
                 {results.map((row)=>(
-                    <GridItem xs={12} sm={6} md={4}>
+                    <GridItem xs={12} sm={6} md={4} style={{marginTop:"10px"}}>
                         <Card onClick={click.bind(this, row)}>
                         <CardActionArea>
                             <CardMedia
@@ -114,11 +114,11 @@ export default function Result(props) {
                             />
                             <CardContent>
                             <Typography gutterBottom variant="h6" component="h2">
-                            {row.video_name.split(".")[0]}  <span style={{fontWeight:400,fontSize:"14px"}}>{(row.duration / 60).toFixed(1) + '分钟'}</span>
+                            {row.video_name.split(".")[0].length>20?row.video_name.split(".")[0].substr(0,20)+"...":row.video_name.split(".")[0]}  <span style={{fontWeight:400,fontSize:"14px"}}>{(row.duration / 60).toFixed(1) + '分钟'}</span>
                             </Typography>
                             <Divider />
                             <Typography variant="body2" color="textSecondary" component="p">
-                                {row.video_url}
+                                {row.video_url.length>20?row.video_url.substr(0,20)+"...":row.video_url}
                             </Typography>
                             </CardContent>
                         </CardActionArea>
