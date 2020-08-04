@@ -6,7 +6,11 @@ import GridItem from "components/Grid/GridItem.js";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Button from "components/CustomButtons/Button.js";
+import { Player } from 'video-react';
 import { useHistory } from "react-router-dom";
+import {techedu_logo} from 'assets/img/techedu.png';
+
+
 const useStyles = makeStyles({
     root: {
       maxWidth: "90%",
@@ -72,6 +76,15 @@ export default function Product(props) {
                     <div>
                         <Button style={{width:"150px",fontSize:"20px",marginTop:"-25px"}} variant="outlined" color="primary" onClick={click}>开始分享</Button>
                     </div>
+                </GridItem>
+            </GridContainer>
+            <GridContainer >
+                <GridItem xs={12} sm={12} md={10} style={{margin: '20px'}}>
+                  <Player
+                      playsInline
+                      poster={'http://35.244.161.66/static/techedu.png'}
+                      src={'http://35.244.161.66/static/intro_video.mp4'}
+                  /> 
                 </GridItem>
             </GridContainer>
         
