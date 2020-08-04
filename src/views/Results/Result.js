@@ -108,7 +108,7 @@ export default function Result(props) {
                             <CardMedia
                             component="img"
                             alt="Contemplative Reptile"
-                            height="140"
+                            height="200"
                             image={row.thumbnail!=undefined?row.thumbnail:require("assets/img/xiaoxin.jpg")}
                             title={row.video_name}
                             />

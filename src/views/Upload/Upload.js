@@ -1,15 +1,22 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import superagent from 'superagent';
 import {useDropzone} from 'react-dropzone';
 import { useHistory } from "react-router-dom";
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 
 import {ENDPOINT, FAKE_DATA, CDN_ENDPOINT,connectSocket,disconnectSocket} from 'api';
+
+import {DropzoneArea} from 'material-ui-dropzone'
+import { Grid } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 export default function UploadComponent(props) {
 
-  const onDrop = useCallback(
-    (acceptedFiles) => {
+  const [uploading, setUpload] = useState(false)
+
+  const uploadFiles = (acceptedFiles) => {
       acceptedFiles.forEach(file => {
         let video_name;
         let video_url;
@@ -20,6 +27,7 @@ export default function UploadComponent(props) {
           video_url =CDN_ENDPOINT + 'clip.mp4';
         } else {
           // Send the video for processing if API enabled
+          setUpload(true)
           superagent
             .post(ENDPOINT+ '/api'+'/upload')
             .attach('upload_file', file)
@@ -34,35 +42,38 @@ export default function UploadComponent(props) {
               //   disconnectSocket(socket);
               // },video_name)
             });
-            
-            
         }
-
-        
-
-        // TODO(这里应该隐去这个模块)
       });
-    },
-    [],
-  )
-  const {acceptedFiles, getRootProps, getInputProps} = useDropzone({onDrop});
-  
-  const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      上传 {file.path} 中... 
-    </li>
-  ));
+  }
 
   return (
-    <section className="container">
-      <div {...getRootProps({className: 'dropzone'})}>
-        <input {...getInputProps()} />
-        <p>点击上传（或拖拽文件至此）</p>
-      </div>
-      <aside>
-        <h4>文件信息</h4>
-        <ul>{files}</ul>
-      </aside>
-    </section>
-  );
+    <Grid container direction="column" alignItems="stretch">
+      <Grid item>
+        <DropzoneArea
+          onChange={uploadFiles}
+          dropzoneText={"拖拽或点击上传视频"}
+          maxFileSize={20000000}
+          acceptedFiles={['.mp4', '.mov']}
+          showPreviewsInDropzone={false}
+          getFileAddedMessage={(fileName) => `视频 ${fileName} 上传中...`}
+        />
+      </Grid>
+      {(uploading) ? <Grid item xs={12} md={12}>
+        <LinearProgress size={150}/>
+      </Grid>:null}
+    </Grid>
+  )
+
+  //return (
+  //  <section className="container">
+  //    <div {...getRootProps({className: 'dropzone'})}>
+  //      <input {...getInputProps()} />
+  //      <p>点击上传（或拖拽文件至此）</p>
+  //    </div>
+  //    <aside>
+  //      <h4>文件信息</h4>
+  //      <ul>{files}</ul>
+  //    </aside>
+  //  </section>
+  //);
 }

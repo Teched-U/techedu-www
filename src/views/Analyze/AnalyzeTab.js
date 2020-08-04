@@ -31,7 +31,7 @@ import {
 import { Stack, Animation } from '@devexpress/dx-react-chart';
 import DataCard from './DataCard.js'
 
-import PropTypes from 'prop-types';
+import PropTypes, { number } from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -338,20 +338,7 @@ class AnalyzePage extends React.Component {
                                             <Stack />
                                         </Chart>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={6}>
-                                        <Chart data={stateData.results.old_durations}>
-                                            <PieSeries valueField="value" argumentField="index" />
-                                            <Title text="整合前" />
-                                        </Chart>
-                                    </GridItem>
-                                    <GridItem xs={12} sm={12} md={6}>
-                                        <Chart data={stateData.results.new_durations}>
-                                            <PieSeries valueField="value" argumentField="index" />
-                                            <Title text="整合后" />
-                                        </Chart>
-                                    </GridItem>
                                 </Grid>
-
                             </Grid>
                         </div> </TabPanel>: null}
                         {stateData.id == 3 ? <TabPanel value={this.state.tabShow} index={2}><div>
@@ -422,65 +409,80 @@ class AnalyzePage extends React.Component {
                                     />
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={12}>
+                                    <Paper style={{maxHeight: 600, overflow:'auto'}}>
                                     <List>
                                         {stateData.results.story_list != undefined ?
                                             stateData.results.story_list.map((row, index) => (
                                                 <div>
-                                                    <Grid container alignContent="space-around">
-                                                        <Grid item xs={12} sm={12} md={6}>
-                                                            <Card className={classes.root}>
-                                                                <CardActionArea>
-                                                                    <CardMedia
-                                                                        className={classes.media}
-                                                                        image={row.thumbnail}
-                                                                        title=""
-                                                                    />
-                                                                    <CardContent>
-                                                                        <Typography gutterBottom variant="h5" component="h2">
-                                                                            短视频{(index + 1)}
-                                                                        </Typography>
-                                                                        <Typography variant="body2" color="textSecondary" component="p">
-                                                                            {format_time(row.timestamp) + '-' + format_time(row.timestamp + row.duration)}
-                                                                        </Typography>
-                                                                    </CardContent>
-                                                                </CardActionArea>
-
-                                                            </Card>
-                                                        </Grid>
-                                                        <Grid item md={6}>
-                                                            <Typography
-                                                                variant="h5">
-                                                                    视频大纲
+                                                    <Card>
+                                                        <CardHeader>
+                                                            <Typography gutterBottom variant="h6" color="primary">
+                                                                短视频{(index + 1)}
                                                             </Typography>
-                                                            <List>
-                                                                {row.outline.map((out) => (
-                                                                    <ListItem alignItems="flex-start">
-                                                                        <ListItemAvatar>
-                                                                            <Avatar variant="square" alt="Remy Sharp" src={out.thumbnail} />
-                                                                        </ListItemAvatar>
-                                                                        <ListItemText
-                                                                            primary={out.result.Title.text}
-                                                                            secondary={
-                                                                                <React.Fragment>
-                                                                                    <Typography
-                                                                                        component="span"
-                                                                                        variant="body2"
-                                                                                        className={classes.inline}
-                                                                                        color="textPrimary"
-                                                                                    >
-                                                                                    </Typography>
-                                                                                </React.Fragment>
-                                                                            }
-                                                                        />
-                                                                    </ListItem>
+                                                            <Typography variant="h6" color="textSecondary" component="p">
+                                                                {format_time(row.timestamp) + '-' + format_time(row.timestamp + row.duration)}
+                                                            </Typography>
 
-                                                                ))}
-                                                            </List>
-                                                        </Grid>
-                                                    </Grid>
+                                                        </CardHeader>
+                                                        <CardContent>
+                                                            <Grid container alignItems="stretch" justify="center" direction="row">
+                                                                <Grid item xs={4} md={4}>
+                                                                    <Card className={classes.root}>
+                                                                        <CardMedia
+                                                                            className={classes.media}
+                                                                            image={row.thumbnail}
+                                                                            title=""
+                                                                        />
+                                                                        <CardContent>
+                                                                            <Typography variant="caption">
+                                                                                智能语音缩写
+                                                                </Typography>
+                                                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                                                {row.summary}
+                                                                            </Typography>
+                                                                        </CardContent>
+                                                                    </Card>
+                                                                </Grid>
+                                                                <Grid item xs={8} md={8}>
+                                                                    <Typography
+                                                                        variant="caption">
+                                                                        视频大纲
+                                                            </Typography>
+
+                                                                    <Paper style={{ maxHeight: 350, overflow: 'auto' }}>
+                                                                        <List>
+                                                                            {row.outline.map((out) => (
+                                                                                <ListItem alignItems="flex-start">
+                                                                                    <ListItemAvatar>
+                                                                                        <Avatar variant="square" alt="Remy Sharp" src={out.thumbnail} />
+                                                                                    </ListItemAvatar>
+                                                                                    <ListItemText
+                                                                                        primary={out.result.Title.text}
+                                                                                        secondary={
+                                                                                            <React.Fragment>
+                                                                                                <Typography
+                                                                                                    component="span"
+                                                                                                    variant="body2"
+                                                                                                    className={classes.inline}
+                                                                                                    color="textPrimary"
+                                                                                                >
+                                                                                                </Typography>
+                                                                                            </React.Fragment>
+                                                                                        }
+                                                                                    />
+                                                                                </ListItem>
+
+                                                                            ))}
+                                                                        </List>
+                                                                    </Paper>
+                                                                </Grid>
+                                                            </Grid>
+                                                        </CardContent>
+                                                    </Card>
                                                 </div>
                                             )) : null}
                                     </List>
+                                    </Paper>
                                 </GridItem>
                             </GridContainer>
                         </div> </TabPanel>: null}

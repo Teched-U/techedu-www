@@ -35,6 +35,7 @@ import video from "assets/video/03_linear-algebra-review.mp4"
 import "video-react/dist/video-react.css"; // import css
 import { Player } from 'video-react';
 import { List, ListItem,  ListItemText, ListSubheader, ListItemAvatar, ListItemIcon } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
 import fake_data from 'assets/json/clip.json'
 
 
@@ -54,6 +55,16 @@ const styles = {
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
     marginBottom: "3px",
     textDecoration: "none"
+  },
+  listSection: {
+    backgroundColor: 'inherit',
+  },
+  ul: {
+    backgroundColor: 'inherit',
+    padding: 0,
+  },
+  listSubheader: {
+    backgroundColor: 'white'
   }
 };
 
@@ -89,6 +100,7 @@ class WatchComponent extends React.Component{
         timestamp: story.timestamp,
         duration: story.duration,
         thumbnail: story.thumbnail,
+        summary: story.summary,
         start: start_time,
         end: end_time,
         outline: []
@@ -144,17 +156,19 @@ class WatchComponent extends React.Component{
     let story_list_elems = this.story_outlines.map((story, story_idx) => (
       <li key={`section-${story_idx}`} className={this.classes.listSection}>
         <ul className={this.classes.ul}>
-          <ListSubheader color={'primary'}>
+          <ListSubheader color={'primary'} className={this.classes.listSubheader}>
             <ListItem button onClick={
                 this.click.bind(this, story.timestamp)
             }>
               <ListItemIcon>
                 <VideocamIcon />
               </ListItemIcon>
+              <Tooltip title={story.summary} arrow>
               <ListItemText
                 primary={`${story.start} - ${story.end}`}
                 primaryTypographyProps={{variant: 'subtitle1'}}
               />
+              </Tooltip>
             </ListItem>
           </ListSubheader>
           {story.outline.map((item, item_idx) => (
@@ -224,37 +238,53 @@ class WatchComponent extends React.Component{
             </Card>
           </GridItem>
           <GridItem xs={12} sm={12} md={4}>
-            <List>
-              {story_list_elems}
-            </List>
+            <Paper style={{maxHeight: 500, overflow:'auto'}}>
+              <List>
+                {story_list_elems}
+              </List>
+            </Paper>
           </GridItem>
          
           {true?<GridItem xs={12} sm={12} md={12}>
-            <CustomInput
-                      labelText=""
-                      id="search"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                      inputProps={{
-                          autoFocus:true,
-                          placeholder:"输入",
-                          onChange:(event)=>{
-                              console.log(event.target.value)
-                              this.setState({
-                                search_data: getSearchResult(event.target.value, this.state.seg_result)
-                              })
-                          },
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              < SearchIcon/>
-                            </InputAdornment>
-                          )
-                      }}
-                    />
-            <List aria-label="contacts" subheader={<li />}>
-              {searchResults}
-            </List>
+            <Card>
+              <CardHeader>
+                <Typography variant="h6">
+                  关键词搜索
+                </Typography>
+                <Typography variant="caption">
+                对视频内字幕及幻灯片文字内容进行搜索
+                </Typography>
+              </CardHeader>
+              <CardBody>
+                <CustomInput
+                  labelText=""
+                  id="search"
+                  formControlProps={{
+                    fullWidth: true
+                  }}
+                  inputProps={{
+                    autoFocus: true,
+                    placeholder: "输入",
+                    onChange: (event) => {
+                      console.log(event.target.value)
+                      this.setState({
+                        search_data: getSearchResult(event.target.value, this.state.seg_result)
+                      })
+                    },
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        < SearchIcon />
+                      </InputAdornment>
+                    )
+                  }}
+                />
+                <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
+                  <List aria-label="contacts" subheader={<li />}>
+                    {searchResults}
+                  </List>
+                </Paper>
+              </CardBody>
+            </Card>
           </GridItem>:null}
         </GridContainer>
       </div>

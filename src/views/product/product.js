@@ -30,7 +30,7 @@ export default function Product(props) {
       <div>
           <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
-                    <Typography gutterBottom variant="h4" component="h1">
+                    <Typography color="primary" gutterBottom variant="h4" style={{color:'#37474F', bold:'800'}}>
                             产品介绍
                         </Typography>
                         <Card className={classes.root}>
@@ -70,7 +70,7 @@ export default function Product(props) {
                 <GridItem xs={12} sm={12} md={6}>
                     <CloudUploadIcon className={classes.icon}></CloudUploadIcon>
                     <div>
-                        <Button style={{width:"150px",fontSize:"20px",marginTop:"-25px"}} variant="outlined" onClick={click}>开始分享</Button>
+                        <Button style={{width:"150px",fontSize:"20px",marginTop:"-25px"}} variant="outlined" color="primary" onClick={click}>开始分享</Button>
                     </div>
                 </GridItem>
             </GridContainer>

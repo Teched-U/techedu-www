@@ -28,6 +28,8 @@ import {getSegResult, getSearchResult} from 'api';
 import { Grid } from "@material-ui/core";
 import {ENDPOINT} from 'api.js';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Chip from '@material-ui/core/Chip';
+
 
 
 // Dependency for Upload
@@ -204,20 +206,6 @@ class DemoPage extends React.Component {
         </div>
         :null
       }
-        {/* 视频上传部分 
-        {(!this.state.video_name)?<GridContainer>
-          <Card>
-            <CardHeader color="primary" >
-              <h3 className={classes.cardTitleWhite} style={{fontWeight:"bold"}}>上传视频</h3>
-              <Divider />
-            </CardHeader>
-            <CardBody>
-              <UploadComponent onUpload={(a, b, c) => this.handleUploadFile(a,b, c)}></UploadComponent>
-            </CardBody>
-          </Card>
-        </GridContainer>:null
-        }
-*/}
         {/* 模型数据展示部分*/}
         {(!!this.state.video_name)?<GridContainer>
           <Card>
@@ -241,12 +229,9 @@ class DemoPage extends React.Component {
                   </Typography>
                   : null}
                   <LinearProgress />
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => this.cancelNow()}>
-                      取消分析
-                  </Button>
+                    <Chip
+                      label="获取数据中"
+                      />
                 </Grid>:null}
               </Grid>
               

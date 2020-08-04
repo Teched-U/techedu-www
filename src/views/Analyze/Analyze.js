@@ -294,6 +294,9 @@ class AnalyzePage extends React.Component {
                                         </Chart>
                                     </GridItem>
                                     <GridItem xs={12} sm={12} md={6}>
+                                        <p>
+                                            {JSON.stringify(stateData.results.old_durations)}
+                                        </p>
                                         <Chart data={stateData.results.old_durations}>
                                             <PieSeries valueField="value" argumentField="index" />
                                             <Title text="整合前" />

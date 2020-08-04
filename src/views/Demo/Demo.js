@@ -28,11 +28,13 @@ import {getSegResult, getSearchResult} from 'api';
 import { Grid } from "@material-ui/core";
 import {ENDPOINT} from 'api.js';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Chip from '@material-ui/core/Chip';
+
 
 
 // Dependency for Upload
 import UploadComponent from 'views/Upload/Upload.js'
-import AnalysisComponent from 'views/Analyze/Analyze.js'
+import AnalysisTabComponent from 'views/Analyze/AnalyzeTab.js'
 import WatchComponent from "views/Watch/Watch.js"
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Grow from '@material-ui/core/Grow';
@@ -151,7 +153,7 @@ class DemoPage extends React.Component {
       }
 
       this.setState({
-        seg_update: result
+        seg_update: result,
       });
 
       if(isDone) {
@@ -164,7 +166,8 @@ class DemoPage extends React.Component {
       }
 
       this.setState({
-        modelView: isDone
+        modelView: isDone,
+        videoView:isDone
       })
     }
     toggleVideo(value){
@@ -177,75 +180,6 @@ class DemoPage extends React.Component {
     const { classes } = this.props
     return (
       <div>
-        {/* 视频上传部分 */}
-        {(!this.state.video_name)?<GridContainer>
-          <Card>
-            <CardHeader color="primary" >
-              <h3 className={classes.cardTitleWhite} style={{fontWeight:"bold"}}>上传视频</h3>
-              <Divider />
-            </CardHeader>
-            <CardBody>
-              <UploadComponent onUpload={(a, b, c) => this.handleUploadFile(a,b, c)}></UploadComponent>
-            </CardBody>
-          </Card>
-        </GridContainer>:null
-        }
-
-        {/* 模型数据展示部分*/}
-        {(!!this.state.video_name)?<GridContainer>
-          <Card>
-            <CardHeader >
-              <Grid container justify="space-between">
-                <Grid item md={4}>
-                  <Typography variant="h4" color="primary" style={{fontWeight:"bold"}}>
-                    模型输出数据
-                    </Typography>
-                </Grid>
-                {(this.state.estimated_time<0)?
-                <Typography variant="title2" color="error">
-                  无法打开视频,请检查视频格式!
-                </Typography>
-                :null}
-                {(!this.state.modelView) ? <Grid>
-                  {(this.state.estimated_time > 0)?
-                  <Typography variant="body2" color="primary">
-                    预计时间: {(this.state.estimated_time / 60).toFixed(1)} 分钟
-                  </Typography>
-                  : null}
-                  <LinearProgress />
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => this.cancelNow()}>
-                      取消分析
-                  </Button>
-                </Grid>:null}
-              </Grid>
-              
-              <Divider />
-            </CardHeader>            
-            <CardBody>
-              <AnalysisComponent
-                videoName={this.state.video_name}
-                videoUrl={this.state.video_url}
-                onUpdate={(result) => this.handleSegResultUpdate(result)}
-                segUpdate={this.state.seg_update}
-                disconnect={this.state.disconnect}
-              >
-              </AnalysisComponent>
-              {(this.state.modelView)?
-                <Button
-                  style={{ width: "150px", fontSize: "20px", marginTop: "-25px", float: "right" }}
-                  variant="outlined"
-                  onClick={this.toggleVideo.bind(this, true)}>
-                  查看视频
-                  </Button>
-                : null}
-            </CardBody>
-          </Card>
-        </GridContainer>
-        :null
-      }
         {/* 视频最终结果观看页面 */}
         {this.state.videoView?<div>
           <Grow in={this.state.videoView}>
@@ -254,7 +188,7 @@ class DemoPage extends React.Component {
           <GridContainer>
             <Card>
               <CardHeader>
-                  <Button className={classes.box} style={{ width: "50px", fontSize: "20px", background: "rgba(1,1,1,0)", marginTop: "-1px", fontWeight: "bold" }} variant="outlined" onClick={this.toggleVideo.bind(this, false)}><ArrowBackIcon></ArrowBackIcon></Button><Typography color="primary" variant="h4" style={{display: 'inline'}} >切割视频展示</Typography> 
+                  {/* <Button className={classes.box} style={{ width: "50px", fontSize: "20px", background: "rgba(1,1,1,0)", marginTop: "-1px", fontWeight: "bold" }} variant="outlined" onClick={this.toggleVideo.bind(this, false)}><ArrowBackIcon></ArrowBackIcon></Button><Typography color="primary" variant="h4" style={{display: 'inline'}} >切割视频展示</Typography>  */}
               <Divider />
               </CardHeader>
               <CardBody>
@@ -272,6 +206,68 @@ class DemoPage extends React.Component {
         </div>
         :null
       }
+        {/* 视频上传部分 */}
+        {(!this.state.video_name)?<GridContainer>
+          <Card>
+            <CardHeader color="primary" >
+              <h3 className={classes.cardTitleWhite} style={{fontWeight:"bold"}}>上传视频</h3>
+              <Divider />
+            </CardHeader>
+            <CardBody>
+              <UploadComponent onUpload={(a, b, c) => this.handleUploadFile(a,b, c)}></UploadComponent>
+            </CardBody>
+          </Card>
+        </GridContainer>:null
+        }
+        {/* 模型数据展示部分*/}
+        {(!!this.state.video_name)?<GridContainer>
+          <Card>
+            <CardHeader >
+              <Grid container justify="space-between">
+                <Grid item md={4}>
+                  <Typography variant="h4"  style={{fontWeight:"bold"}}>
+                  <Divider orientation="vertical" flexItem style={{width:"4px",height:"40px",float:"left",background:"#2981ee",marginRight:"20px"}} />
+                  模型输出数据
+                    </Typography>
+                </Grid>
+                {(this.state.estimated_time<0)?
+                <Typography variant="title2" color="error">
+                  无法打开视频,请检查视频格式!
+                </Typography>
+                :null}
+                {(!this.state.modelView) ? <Grid>
+                  {(this.state.estimated_time > 0)?
+                  <Typography variant="body2" color="primary">
+                    预计时间: {(this.state.estimated_time / 60).toFixed(1)} 分钟
+                  </Typography>
+                  : null}
+                  <LinearProgress />
+                  <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => this.cancelNow()}>
+                      取消分析
+                  </Button>
+                </Grid>:null}
+              </Grid>
+              
+              <Divider />
+            </CardHeader>            
+            <CardBody>
+              <AnalysisTabComponent
+                videoName={this.state.video_name}
+                videoUrl={this.state.video_url}
+                onUpdate={(result) => this.handleSegResultUpdate(result)}
+                segUpdate={this.state.seg_update}
+                disconnect={this.state.disconnect}
+              >
+              </AnalysisTabComponent>
+            </CardBody>
+          </Card>
+        </GridContainer>
+        :null
+      }
+        
       </div>
     );
   }
