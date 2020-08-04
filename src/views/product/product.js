@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     icon:{
         width:"150px",
         height:"150px",
-        marginTop:'15%'
+        //marginTop:'15%'
     }
   });
 
@@ -33,10 +33,21 @@ export default function Product(props) {
   return (
       <div>
           <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
+                    <GridItem xs={12} sm={12} md={8}>
                     <Typography color="primary" gutterBottom variant="h4" style={{color:'#37474F', bold:'800'}}>
                             产品介绍
                         </Typography>
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
+                    {/* <CloudUploadIcon className={classes.icon}></CloudUploadIcon> */}
+                    <div style={{float:"right",marginRight:"10%"}}>
+                        <Button style={{width:"150px",fontSize:"20px"}} variant="outlined" color="primary" onClick={click}>开始分享</Button>
+                    </div>
+                    </GridItem>
+                    {/*  */}
+                    <GridItem xs={12} sm={12} md={4}>
+
+                        
                         <Card className={classes.root}>
                         
                         <CardContent>
@@ -48,6 +59,8 @@ export default function Product(props) {
                         </Typography>
                         </CardContent>
                     </Card>
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
                     <Card className={classes.root}>
                         
                         <CardContent>
@@ -59,6 +72,8 @@ export default function Product(props) {
                         </Typography>
                         </CardContent>
                     </Card>
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
                     <Card className={classes.root}>
                         
                         <CardContent>
@@ -70,13 +85,9 @@ export default function Product(props) {
                         </Typography>
                         </CardContent>
                     </Card>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={6}>
-                    <CloudUploadIcon className={classes.icon}></CloudUploadIcon>
-                    <div>
-                        <Button style={{width:"150px",fontSize:"20px",marginTop:"-25px"}} variant="outlined" color="primary" onClick={click}>开始分享</Button>
-                    </div>
-                </GridItem>
+                    </GridItem>
+                
+                
             </GridContainer>
             <GridContainer >
                 <GridItem xs={12} sm={12} md={10} style={{margin: '20px'}}>
