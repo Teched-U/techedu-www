@@ -211,6 +211,9 @@ class DemoPage extends React.Component {
           <Card>
             <CardHeader color="primary" >
               <h3 className={classes.cardTitleWhite} style={{fontWeight:"bold"}}>上传视频</h3>
+              <Typography variant="subtitle1">
+                请上传英文带PPT的视频。视频处理可能需要一定时间。建议上传较短视频（5-10分钟）进行现场处理。
+              </Typography>
               <Divider />
             </CardHeader>
             <CardBody>
